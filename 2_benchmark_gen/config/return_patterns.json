@@ -1,0 +1,213 @@
+{
+  "patterns": [
+    {
+      "id": "count_total",
+      "category": "count",
+      "description": "总数统计",
+      "template": "RETURN count(DISTINCT p) AS total",
+      "result_type": "scalar",
+      "question_templates": [
+        "{context}有多少专利？",
+        "{context}的专利数量是多少？",
+        "统计{context}的专利总数",
+        "{context}专利共有多少件？"
+      ]
+    },
+    {
+      "id": "count_by_year",
+      "category": "count",
+      "description": "按年份统计",
+      "template": "WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+      "result_type": "list",
+      "question_templates": [
+        "{context}各年份的专利数量分布",
+        "{context}按年份统计专利数量",
+        "{context}每年的专利申请数量"
+      ]
+    },
+    {
+      "id": "count_by_domain",
+      "category": "count",
+      "description": "按领域统计",
+      "template": "MATCH (p)-[:BELONGS_TO]->(td:TechDomain) WITH td.name AS domain, count(DISTINCT p) AS count RETURN domain, count ORDER BY count DESC",
+      "result_type": "list",
+      "question_templates": [
+        "{context}各技术领域的专利分布",
+        "{context}按领域统计专利数量",
+        "{context}不同领域的专利数量对比"
+      ]
+    },
+    {
+      "id": "count_by_org",
+      "category": "count",
+      "description": "按机构统计",
+      "template": "MATCH (p)-[:APPLIED_BY]->(o:Organization) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT 20",
+      "result_type": "list",
+      "question_templates": [
+        "{context}各机构的专利数量统计",
+        "{context}按申请机构统计专利",
+        "{context}各机构的专利分布情况"
+      ]
+    },
+    {
+      "id": "top_n_orgs",
+      "category": "rank",
+      "description": "机构排名Top N",
+      "template": "MATCH (p)-[:APPLIED_BY]->(o:Organization) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT {n}",
+      "result_type": "list",
+      "params": {"n": [5, 10, 15, 20]},
+      "question_templates": [
+        "{context}专利数量最多的前{n}个机构",
+        "{context}专利数量Top{n}的机构排名",
+        "{context}哪些机构专利最多？列出前{n}名"
+      ]
+    },
+    {
+      "id": "top_n_orgs_by_type",
+      "category": "rank",
+      "description": "按类型的机构排名",
+      "template": "MATCH (p)-[:APPLIED_BY]->(o:Organization {{entity_type: '{org_type}'}}) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT {n}",
+      "result_type": "list",
+      "params": {"n": [5, 10], "org_type": ["公司", "高校", "研究机构"]},
+      "question_templates": [
+        "{context}专利最多的前{n}家{org_type}",
+        "{context}{org_type}专利数量排名前{n}",
+        "{context}哪些{org_type}的专利最多？"
+      ]
+    },
+    {
+      "id": "top_n_provinces",
+      "category": "rank",
+      "description": "省份排名",
+      "template": "MATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province IS NOT NULL AND loc.province <> '' WITH loc.province AS province, count(DISTINCT p) AS count RETURN province, count ORDER BY count DESC LIMIT {n}",
+      "result_type": "list",
+      "params": {"n": [5, 10]},
+      "question_templates": [
+        "{context}专利数量最多的前{n}个省份",
+        "{context}哪些省份的专利最多？",
+        "{context}各省专利数量排名"
+      ]
+    },
+    {
+      "id": "top_n_countries",
+      "category": "rank",
+      "description": "国家排名",
+      "template": "MATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.country IS NOT NULL AND loc.country <> '' WITH loc.country AS country, count(DISTINCT p) AS count RETURN country, count ORDER BY count DESC LIMIT {n}",
+      "result_type": "list",
+      "params": {"n": [5, 10]},
+      "question_templates": [
+        "{context}专利数量最多的前{n}个国家",
+        "{context}哪些国家的专利最多？",
+        "{context}各国专利数量排名"
+      ]
+    },
+    {
+      "id": "list_patents",
+      "category": "list",
+      "description": "专利列表",
+      "template": "RETURN p.application_no AS app_no, p.title_cn AS title, substring(p.application_date, 0, 4) AS year LIMIT {limit}",
+      "result_type": "list",
+      "params": {"limit": [10, 20, 50]},
+      "question_templates": [
+        "列出{context}的专利",
+        "查询{context}有哪些专利",
+        "{context}的专利列表"
+      ]
+    },
+    {
+      "id": "list_patents_with_detail",
+      "category": "list",
+      "description": "专利详情列表",
+      "template": "RETURN p.application_no AS app_no, p.title_cn AS title, p.abstract_cn AS abstract, p.application_date AS date LIMIT {limit}",
+      "result_type": "list",
+      "params": {"limit": [5, 10]},
+      "question_templates": [
+        "查询{context}专利的详细信息",
+        "{context}专利的标题和摘要",
+        "获取{context}专利详情"
+      ]
+    },
+    {
+      "id": "list_recent_patents",
+      "category": "list",
+      "description": "最新专利列表",
+      "template": "RETURN p.application_no AS app_no, p.title_cn AS title, p.application_date AS date ORDER BY p.application_date DESC LIMIT {limit}",
+      "result_type": "list",
+      "params": {"limit": [10, 20]},
+      "question_templates": [
+        "{context}最新的{limit}件专利",
+        "{context}最近申请的专利有哪些",
+        "查询{context}的最新专利"
+      ]
+    },
+    {
+      "id": "trend_by_year",
+      "category": "trend",
+      "description": "年度趋势",
+      "template": "WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+      "result_type": "list",
+      "question_templates": [
+        "{context}的年度专利趋势",
+        "{context}专利数量随年份的变化",
+        "{context}各年的专利申请趋势如何"
+      ]
+    },
+    {
+      "id": "trend_recent_years",
+      "category": "trend",
+      "description": "近N年趋势",
+      "template": "WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count WHERE toInteger(year) >= {start_year} RETURN year, count ORDER BY year",
+      "result_type": "list",
+      "params": {"start_year": [2015, 2018, 2020]},
+      "question_templates": [
+        "{context}从{start_year}年至今的专利趋势",
+        "{context}近几年的专利申请变化",
+        "{start_year}年以来{context}专利数量的变化"
+      ]
+    },
+    {
+      "id": "avg_transfer_count",
+      "category": "aggregate",
+      "description": "平均转让次数",
+      "template": "RETURN round(avg(p.transfer_count) * 100) / 100 AS avg_transfer",
+      "result_type": "scalar",
+      "question_templates": [
+        "{context}专利的平均转让次数",
+        "{context}专利平均被转让多少次"
+      ]
+    },
+    {
+      "id": "max_transfer_count",
+      "category": "aggregate",
+      "description": "最大转让次数",
+      "template": "RETURN max(p.transfer_count) AS max_transfer",
+      "result_type": "scalar",
+      "question_templates": [
+        "{context}专利最多被转让多少次",
+        "{context}转让次数最多的专利被转让了几次"
+      ]
+    },
+    {
+      "id": "count_with_transfer",
+      "category": "aggregate",
+      "description": "有转让的专利数",
+      "template": "WITH count(DISTINCT CASE WHEN p.transfer_count > 0 THEN p END) AS with_transfer, count(DISTINCT p) AS total RETURN with_transfer, total, round(with_transfer * 100.0 / total * 100) / 100 AS ratio",
+      "result_type": "scalar",
+      "question_templates": [
+        "{context}有多少专利被转让过",
+        "{context}专利的转让率是多少"
+      ]
+    },
+    {
+      "id": "count_with_litigation",
+      "category": "aggregate",
+      "description": "有诉讼的专利数",
+      "template": "WITH count(DISTINCT CASE WHEN p.litigation_count > 0 THEN p END) AS with_litigation, count(DISTINCT p) AS total RETURN with_litigation, total, round(with_litigation * 100.0 / total * 100) / 100 AS ratio",
+      "result_type": "scalar",
+      "question_templates": [
+        "{context}有多少专利涉及诉讼",
+        "{context}专利的诉讼率是多少"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "train_size": 3998,
+  "test_size": 1002,
+  "total_size": 5000,
+  "train_ratio": 0.8
+}

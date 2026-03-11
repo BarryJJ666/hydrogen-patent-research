@@ -1,0 +1,234 @@
+{
+  "patterns": [
+    {
+      "id": "all_patents",
+      "category": "basic",
+      "description": "全部专利",
+      "template": "MATCH (p:Patent)",
+      "variables": {"p": "Patent"},
+      "params": {},
+      "context_template": "氢能领域",
+      "complexity": 1
+    },
+    {
+      "id": "patent_by_domain",
+      "category": "domain",
+      "description": "按技术领域",
+      "template": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: $domain})",
+      "variables": {"p": "Patent", "td": "TechDomain"},
+      "params": {"domain": {"type": "domain_enum"}},
+      "context_template": "{domain}领域",
+      "complexity": 2
+    },
+    {
+      "id": "patent_by_org",
+      "category": "org",
+      "description": "按机构名称",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization) WHERE o.name CONTAINS $org",
+      "variables": {"p": "Patent", "o": "Organization"},
+      "params": {"org": {"type": "org_sample"}},
+      "context_template": "{org}",
+      "complexity": 2
+    },
+    {
+      "id": "patent_by_org_type",
+      "category": "org",
+      "description": "按机构类型",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: $org_type})",
+      "variables": {"p": "Patent", "o": "Organization"},
+      "params": {"org_type": {"type": "org_type_enum"}},
+      "context_template": "{org_type}",
+      "complexity": 2
+    },
+    {
+      "id": "patent_by_province",
+      "category": "region",
+      "description": "按省份",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = $province",
+      "variables": {"p": "Patent", "o": "Organization", "loc": "Location"},
+      "params": {"province": {"type": "province_sample"}},
+      "context_template": "{province}",
+      "complexity": 3
+    },
+    {
+      "id": "patent_by_city",
+      "category": "region",
+      "description": "按城市",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.city = $city",
+      "variables": {"p": "Patent", "o": "Organization", "loc": "Location"},
+      "params": {"city": {"type": "city_sample"}},
+      "context_template": "{city}",
+      "complexity": 3
+    },
+    {
+      "id": "patent_by_country",
+      "category": "region",
+      "description": "按国家",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.country = $country",
+      "variables": {"p": "Patent", "o": "Organization", "loc": "Location"},
+      "params": {"country": {"type": "country_sample"}},
+      "context_template": "{country}",
+      "complexity": 3
+    },
+    {
+      "id": "patent_by_year",
+      "category": "time",
+      "description": "按年份",
+      "template": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) = $year",
+      "variables": {"p": "Patent"},
+      "params": {"year": {"type": "year_sample"}},
+      "context_template": "{year}年",
+      "complexity": 2
+    },
+    {
+      "id": "patent_by_year_range",
+      "category": "time",
+      "description": "按年份范围",
+      "template": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= $year_start AND substring(p.application_date, 0, 4) <= $year_end",
+      "variables": {"p": "Patent"},
+      "params": {"year_start": {"type": "year_sample"}, "year_end": {"type": "year_sample"}},
+      "context_template": "{year_start}年到{year_end}年",
+      "complexity": 2
+    },
+    {
+      "id": "patent_with_transfer",
+      "category": "business",
+      "description": "有转让记录",
+      "template": "MATCH (p:Patent) WHERE p.transfer_count > 0",
+      "variables": {"p": "Patent"},
+      "params": {},
+      "context_template": "有转让记录的",
+      "complexity": 2
+    },
+    {
+      "id": "patent_with_license",
+      "category": "business",
+      "description": "有许可记录",
+      "template": "MATCH (p:Patent) WHERE p.license_count > 0",
+      "variables": {"p": "Patent"},
+      "params": {},
+      "context_template": "有许可记录的",
+      "complexity": 2
+    },
+    {
+      "id": "patent_with_pledge",
+      "category": "business",
+      "description": "有质押记录",
+      "template": "MATCH (p:Patent) WHERE p.pledge_count > 0",
+      "variables": {"p": "Patent"},
+      "params": {},
+      "context_template": "有质押记录的",
+      "complexity": 2
+    },
+    {
+      "id": "patent_with_litigation",
+      "category": "business",
+      "description": "有诉讼记录",
+      "template": "MATCH (p:Patent) WHERE p.litigation_count > 0",
+      "variables": {"p": "Patent"},
+      "params": {},
+      "context_template": "有诉讼记录的",
+      "complexity": 2
+    },
+    {
+      "id": "patent_transferee",
+      "category": "business",
+      "description": "被特定机构受让",
+      "template": "MATCH (p:Patent)-[:TRANSFERRED_TO]->(o:Organization) WHERE o.name CONTAINS $transferee",
+      "variables": {"p": "Patent", "o": "Organization"},
+      "params": {"transferee": {"type": "org_sample"}},
+      "context_template": "被{transferee}受让的",
+      "complexity": 3
+    },
+    {
+      "id": "org_domain_combo",
+      "category": "combo",
+      "description": "机构+领域组合",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization), (p)-[:BELONGS_TO]->(td:TechDomain {name: $domain}) WHERE o.name CONTAINS $org",
+      "variables": {"p": "Patent", "o": "Organization", "td": "TechDomain"},
+      "params": {"org": {"type": "org_sample"}, "domain": {"type": "domain_enum"}},
+      "context_template": "{org}在{domain}领域的",
+      "complexity": 3
+    },
+    {
+      "id": "province_domain_combo",
+      "category": "combo",
+      "description": "省份+领域组合",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: $domain}) WHERE loc.province = $province",
+      "variables": {"p": "Patent", "o": "Organization", "loc": "Location", "td": "TechDomain"},
+      "params": {"province": {"type": "province_sample"}, "domain": {"type": "domain_enum"}},
+      "context_template": "{province}{domain}领域的",
+      "complexity": 4
+    },
+    {
+      "id": "country_domain_combo",
+      "category": "combo",
+      "description": "国家+领域组合",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: $domain}) WHERE loc.country = $country",
+      "variables": {"p": "Patent", "o": "Organization", "loc": "Location", "td": "TechDomain"},
+      "params": {"country": {"type": "country_sample"}, "domain": {"type": "domain_enum"}},
+      "context_template": "{country}{domain}领域的",
+      "complexity": 4
+    },
+    {
+      "id": "org_year_combo",
+      "category": "combo",
+      "description": "机构+年份组合",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization) WHERE o.name CONTAINS $org AND substring(p.application_date, 0, 4) = $year",
+      "variables": {"p": "Patent", "o": "Organization"},
+      "params": {"org": {"type": "org_sample"}, "year": {"type": "year_sample"}},
+      "context_template": "{org}{year}年的",
+      "complexity": 3
+    },
+    {
+      "id": "domain_year_combo",
+      "category": "combo",
+      "description": "领域+年份组合",
+      "template": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: $domain}) WHERE substring(p.application_date, 0, 4) = $year",
+      "variables": {"p": "Patent", "td": "TechDomain"},
+      "params": {"domain": {"type": "domain_enum"}, "year": {"type": "year_sample"}},
+      "context_template": "{year}年{domain}领域的",
+      "complexity": 3
+    },
+    {
+      "id": "org_type_domain_combo",
+      "category": "combo",
+      "description": "机构类型+领域组合",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: $org_type}), (p)-[:BELONGS_TO]->(td:TechDomain {name: $domain})",
+      "variables": {"p": "Patent", "o": "Organization", "td": "TechDomain"},
+      "params": {"org_type": {"type": "org_type_enum"}, "domain": {"type": "domain_enum"}},
+      "context_template": "{org_type}在{domain}领域的",
+      "complexity": 3
+    },
+    {
+      "id": "province_year_combo",
+      "category": "combo",
+      "description": "省份+年份组合",
+      "template": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = $province AND substring(p.application_date, 0, 4) = $year",
+      "variables": {"p": "Patent", "o": "Organization", "loc": "Location"},
+      "params": {"province": {"type": "province_sample"}, "year": {"type": "year_sample"}},
+      "context_template": "{province}{year}年的",
+      "complexity": 4
+    },
+    {
+      "id": "transfer_domain_combo",
+      "category": "combo",
+      "description": "转让+领域组合",
+      "template": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: $domain}) WHERE p.transfer_count > 0",
+      "variables": {"p": "Patent", "td": "TechDomain"},
+      "params": {"domain": {"type": "domain_enum"}},
+      "context_template": "{domain}领域有转让记录的",
+      "complexity": 3
+    },
+    {
+      "id": "litigation_domain_combo",
+      "category": "combo",
+      "description": "诉讼+领域组合",
+      "template": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: $domain}) WHERE p.litigation_count > 0",
+      "variables": {"p": "Patent", "td": "TechDomain"},
+      "params": {"domain": {"type": "domain_enum"}},
+      "context_template": "{domain}领域有诉讼记录的",
+      "complexity": 3
+    }
+  ]
+}

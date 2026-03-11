@@ -1,0 +1,2 @@
+// 向量索引 (需要Neo4j 5.11+)
+CREATE VECTOR INDEX patent_vector_index IF NOT EXISTS FOR (p:Patent) ON (p.embedding) OPTIONS {indexConfig: {`vector.dimensions`: 1024, `vector.similarity_function`: 'cosine'}};
