@@ -1,0 +1,26 @@
+# 氢能模型评估系统依赖
+
+# Neo4j
+neo4j>=5.0.0
+
+# API请求
+requests>=2.28.0
+
+# LiteLLM（统一LLM API调用）
+litellm>=1.0.0
+
+# vLLM本地推理
+vllm>=0.3.0
+torch>=2.0.0
+transformers>=4.36.0
+
+# 数据处理
+numpy>=1.24.0
+pandas>=2.0.0
+
+# 日志和工具
+tqdm>=4.65.0
+pyyaml>=6.0
+
+# 可选：可视化
+matplotlib>=3.7.0
