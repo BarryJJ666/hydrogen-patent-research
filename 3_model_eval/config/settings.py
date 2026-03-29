@@ -177,6 +177,47 @@ def _generate_api_model_configs():
                       "trend_patents", "get_patent_detail", "search"],
         }
 
+    # ==================================================================
+    # 推理增强基线（OpenRouter API，GLM-5）
+    # ==================================================================
+    OPENROUTER_KEY = os.getenv("OPENROUTER_API_KEY", "")
+
+    # 0. GLM-5 Direct (OpenRouter) — 作为 repair/SC 的 zero-shot 对照
+    configs["glm5_or_direct"] = {
+        "name": "GLM-5 (OpenRouter, Direct)",
+        "type": "openrouter",
+        "api_key": OPENROUTER_KEY,
+        "model_id": "z-ai/glm-5",
+        "timeout": 120,
+        "max_retries": 5,
+        "mode": "direct",
+    }
+
+    # 1. Execution-Guided Repair（执行引导修复）
+    configs["glm5_repair"] = {
+        "name": "GLM-5 + Repair (2 rounds)",
+        "type": "repair",
+        "api_key": OPENROUTER_KEY,
+        "model_id": "z-ai/glm-5",
+        "timeout": 120,
+        "max_retries": 5,
+        "mode": "direct",
+        "max_repair_attempts": 2,
+    }
+
+    # 2. Self-Consistency（自一致性投票）
+    configs["glm5_self_consistency"] = {
+        "name": "GLM-5 + SC (k=5)",
+        "type": "self_consistency",
+        "api_key": OPENROUTER_KEY,
+        "model_id": "z-ai/glm-5",
+        "timeout": 120,
+        "max_retries": 5,
+        "mode": "direct",
+        "num_samples": 5,
+        "sample_temperature": 0.7,
+    }
+
     return configs
 
 

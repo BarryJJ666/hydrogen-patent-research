@@ -1,0 +1,402 @@
+[
+  {
+    "qid": "q0000",
+    "question": "法国原子能和替代能源委员会在各个技术领域分别有多少专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization) WHERE o.name CONTAINS '法国原子能和替代能源委员会' MATCH (p)-[:BELONGS_TO]->(td:TechDomain) WITH td.name AS domain, count(DISTINCT p) AS count RETURN domain, count ORDER BY count DESC",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization), (p)-[:BELONGS_TO]->(td:TechDomain) WHERE o.name CONTAINS '法国原子能和替代能源委员会' RETURN td.name AS tech_domain, count(DISTINCT p) AS patent_count ORDER BY patent_count DESC",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0001",
+    "question": "请问海南省在2024年申请了哪些最新的氢能专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '海南省' AND substring(p.application_date, 0, 4) = '2024' RETURN p.application_no AS app_no, p.title_cn AS title, p.application_date AS date ORDER BY p.application_date DESC LIMIT 20",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '海南省' AND substring(p.application_date, 0, 4) = '2024' RETURN p.application_no AS app_no, p.title_cn AS title, p.abstract_cn AS abstract, p.application_date AS date ORDER BY p.application_date DESC",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0002",
+    "question": "2006年到2022年一共有多少件专利？",
+    "gold_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2006' AND substring(p.application_date, 0, 4) <= '2022' RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2006' AND substring(p.application_date, 0, 4) <= '2022' RETURN count(DISTINCT p) AS total_patents",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0003",
+    "question": "物理储氢领域有哪些已经发生转让的专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '物理储氢'}) WHERE p.transfer_count > 0 RETURN p.application_no AS app_no, p.title_cn AS title, substring(p.application_date, 0, 4) AS year LIMIT 50",
+    "pred_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '物理储氢'}) WHERE p.transfer_count > 0 RETURN p.application_no AS app_no, p.title_cn AS title, p.transfer_count AS transfer_count",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0004",
+    "question": "有诉讼记录的专利总共有多少件？",
+    "gold_cypher": "MATCH (p:Patent) WHERE p.litigation_count > 0 RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent)-[:LITIGATED_WITH]->() RETURN count(DISTINCT p) AS litigation_patent_count",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0005",
+    "question": "2018年以来宿迁市每年的氢能专利数量是多少？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.city = '宿迁市' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count WHERE toInteger(year) >= 2018 RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.city = '宿迁市' AND substring(p.application_date, 0, 4) >= '2018' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0006",
+    "question": "在四川省，氢制冷领域有哪些相关的专利信息？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '氢制冷'}) WHERE loc.province = '四川省' RETURN p.application_no AS app_no, p.title_cn AS title, substring(p.application_date, 0, 4) AS year LIMIT 10",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '氢制冷'}) WHERE loc.province = '四川省' RETURN p.application_no AS app_no, p.title_cn AS title, p.abstract_cn AS abstract, p.application_date AS date, o.name AS applicant LIMIT 10",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0007",
+    "question": "液化空气集团在2006年申请的最新10件专利有哪些？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization) WHERE o.name CONTAINS '液化空气集团' AND substring(p.application_date, 0, 4) = '2006' RETURN p.application_no AS app_no, p.title_cn AS title, p.application_date AS date ORDER BY p.application_date DESC LIMIT 10",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization) WHERE o.name CONTAINS '液化空气集团' AND substring(p.application_date, 0, 4) = '2006' RETURN p.application_no AS app_no, p.title_cn AS title, p.abstract_cn AS abstract, p.application_date AS date ORDER BY p.application_date DESC LIMIT 10",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0008",
+    "question": "新疆维吾尔自治区有哪些机构在物理储氢领域申请了专利，可以按申请数量排名前二十位给我看看吗？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '物理储氢'}) WHERE loc.province = '新疆维吾尔自治区' MATCH (p)-[:APPLIED_BY]->(o:Organization) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT 20",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '物理储氢'}) WHERE loc.province = '新疆维吾尔自治区' RETURN o.name AS org_name, count(DISTINCT p) AS patent_count ORDER BY patent_count DESC LIMIT 20",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0009",
+    "question": "2015年以来，公司在氢燃料电池领域的专利申请数量呈现怎样的趋势？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: '公司'}), (p)-[:BELONGS_TO]->(td:TechDomain {name: '氢燃料电池'}) WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count WHERE toInteger(year) >= 2015 RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization), (p)-[:BELONGS_TO]->(td:TechDomain {name: '氢燃料电池'}) WHERE substring(p.application_date, 0, 4) >= '2015' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0010",
+    "question": "研究机构在氢燃料电池领域申请专利最多的前五个省份是哪些？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: '研究机构'}), (p)-[:BELONGS_TO]->(td:TechDomain {name: '氢燃料电池'}) MATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province IS NOT NULL AND loc.province <> '' WITH loc.province AS province, count(DISTINCT p) AS count RETURN province, count ORDER BY count DESC LIMIT 5",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '氢燃料电池'}) WHERE o.entity_type = '研究机构' WITH loc.province AS province, count(DISTINCT p) AS patent_count RETURN province, patent_count ORDER BY patent_count DESC LIMIT 5",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0011",
+    "question": "2005年物理储氢领域专利数量排名前五的国家是哪些？",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '物理储氢'}) WHERE substring(p.application_date, 0, 4) = '2005' MATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.country IS NOT NULL AND loc.country <> '' WITH loc.country AS country, count(DISTINCT p) AS count RETURN country, count ORDER BY count DESC LIMIT 5",
+    "pred_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '物理储氢'}), (p)-[:PUBLISHED_IN]->(c:Country) WHERE substring(p.application_date, 0, 4) = '2005' RETURN c.name AS country, count(DISTINCT p) AS patent_count ORDER BY patent_count DESC LIMIT 5",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0012",
+    "question": "列出2013年申请的专利有哪些？",
+    "gold_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) = '2013' RETURN p.application_no AS app_no, p.title_cn AS title, substring(p.application_date, 0, 4) AS year LIMIT 50",
+    "pred_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) = '2013' RETURN p.application_no AS app_no, p.title_cn AS title, p.application_date AS date, p.patent_type AS type LIMIT 50",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0013",
+    "question": "2018年到2020年间有多少个专利申请？",
+    "gold_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2018' AND substring(p.application_date, 0, 4) <= '2020' RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2018' AND substring(p.application_date, 0, 4) <= '2020' RETURN count(DISTINCT p) AS patent_count",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0014",
+    "question": "2012年到2022年期间，每年有多少件专利申请？",
+    "gold_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2012' AND substring(p.application_date, 0, 4) <= '2022' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2012' AND substring(p.application_date, 0, 4) <= '2022' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0015",
+    "question": "哈萨克斯坦从2015年起每年的专利申请数量是多少？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.country = '哈萨克斯坦' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count WHERE toInteger(year) >= 2015 RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(c:Country {name: '哈萨克斯坦'}) WHERE substring(p.application_date, 0, 4) >= '2015' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0016",
+    "question": "中国台湾在无机储氢领域有多少项专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '无机储氢'}) WHERE loc.province = '中国台湾' RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(c:Country), (p)-[:BELONGS_TO]->(td:TechDomain {name: '无机储氢'}) WHERE c.name = '中国台湾' RETURN count(DISTINCT p) AS patent_count",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0017",
+    "question": "河北工业大学最新受让的20件专利是哪些？",
+    "gold_cypher": "MATCH (p:Patent)-[:TRANSFERRED_TO]->(o:Organization) WHERE o.name CONTAINS '河北工业大学' RETURN p.application_no AS app_no, p.title_cn AS title, p.application_date AS date ORDER BY p.application_date DESC LIMIT 20",
+    "pred_cypher": "MATCH (p:Patent)-[r:TRANSFERRED_TO]->(o:Organization {name: '河北工业大学'}) RETURN p.application_no AS app_no, p.title_cn AS title, p.application_date AS date, p.transfer_count AS transfer_count ORDER BY p.application_date DESC LIMIT 20",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0018",
+    "question": "广东云韬氢能科技有限公司受让了多少项专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:TRANSFERRED_TO]->(o:Organization) WHERE o.name CONTAINS '广东云韬氢能科技有限公司' RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent)-[r:TRANSFERRED_TO]->(o:Organization {name: '广东云韬氢能科技有限公司'}) RETURN count(DISTINCT p) AS transferred_count",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0019",
+    "question": "制氢技术领域有多少涉及诉讼的专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '制氢技术'}) WHERE p.litigation_count > 0 RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '制氢技术'}) WHERE p.litigation_count > 0 RETURN count(DISTINCT p) AS litigation_patent_count",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0020",
+    "question": "中国香港合金储氢领域各年的专利数量分别是多少？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '合金储氢'}) WHERE loc.province = '中国香港' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '合金储氢'}) WHERE loc.province = '香港特别行政区' OR loc.name CONTAINS '香港' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0021",
+    "question": "2024年氢制冷领域各国专利数量最多的前五个国家是哪些？",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '氢制冷'}) WHERE substring(p.application_date, 0, 4) = '2024' MATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.country IS NOT NULL AND loc.country <> '' WITH loc.country AS country, count(DISTINCT p) AS count RETURN country, count ORDER BY count DESC LIMIT 5",
+    "pred_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '氢制冷'}), (p)-[:PUBLISHED_IN]->(c:Country) WHERE substring(p.application_date, 0, 4) = '2024' RETURN c.name AS country, count(DISTINCT p) AS patent_count ORDER BY patent_count DESC LIMIT 5",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0022",
+    "question": "请问宁夏回族自治区有哪些无机储氢领域的专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '无机储氢'}) WHERE loc.province = '宁夏回族自治区' RETURN p.application_no AS app_no, p.title_cn AS title, p.abstract_cn AS abstract, p.application_date AS date LIMIT 5",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '无机储氢'}) WHERE loc.province = '宁夏回族自治区' RETURN p.application_no AS app_no, p.title_cn AS title, p.abstract_cn AS abstract, p.application_date AS date",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0023",
+    "question": "大连理工大学在2011年申请了多少项专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization) WHERE o.name CONTAINS '大连理工大学' AND substring(p.application_date, 0, 4) = '2011' RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization) WHERE o.name CONTAINS '大连理工大学' AND substring(p.application_date, 0, 4) = '2011' RETURN count(DISTINCT p) AS patent_count",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0024",
+    "question": "上海市2022年各机构的专利数量排名前二十的是哪些？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '上海市' AND substring(p.application_date, 0, 4) = '2022' MATCH (p)-[:APPLIED_BY]->(o:Organization) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT 20",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.city = '上海市' AND substring(p.application_date, 0, 4) = '2022' WITH o.name AS org_name, count(DISTINCT p) AS patent_count RETURN org_name, patent_count ORDER BY patent_count DESC LIMIT 20",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0025",
+    "question": "从2008年到2025年一共有多少件专利？",
+    "gold_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2008' AND substring(p.application_date, 0, 4) <= '2025' RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2008' AND substring(p.application_date, 0, 4) <= '2025' RETURN count(p) AS total_patents",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0026",
+    "question": "查询在加拿大申请的氢能专利有哪些？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.country = '加拿大' RETURN p.application_no AS app_no, p.title_cn AS title, p.abstract_cn AS abstract, p.application_date AS date LIMIT 10",
+    "pred_cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(c:Country {name: '加拿大'}) RETURN p.application_no AS app_no, p.title_cn AS title, p.abstract_cn AS abstract, p.application_date AS date",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0027",
+    "question": "中国科学院大连化学物理研究所近几年受让的专利申请数量有何变化？",
+    "gold_cypher": "MATCH (p:Patent)-[:TRANSFERRED_TO]->(o:Organization) WHERE o.name CONTAINS '中国科学院大连化学物理研究所' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count WHERE toInteger(year) >= 2018 RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent)-[r:TRANSFERRED_TO]->(o:Organization) WHERE o.name CONTAINS '中国科学院大连化学物理研究所' AND substring(p.application_date, 0, 4) >= '2019' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0028",
+    "question": "中国石油化工股份有限公司上海石油化工研究院在哪几个国家的专利数量最多？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization) WHERE o.name CONTAINS '中国石油化工股份有限公司上海石油化工研究院' MATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.country IS NOT NULL AND loc.country <> '' WITH loc.country AS country, count(DISTINCT p) AS count RETURN country, count ORDER BY count DESC LIMIT 5",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization), (p)-[:PUBLISHED_IN]->(c:Country) WHERE o.name = '中国石油化工股份有限公司上海石油化工研究院' RETURN c.name AS country, count(DISTINCT p) AS patent_count ORDER BY patent_count DESC",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0029",
+    "question": "从2020年至今，每年的专利数量趋势是怎样的？",
+    "gold_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2017' AND substring(p.application_date, 0, 4) <= '2025' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count WHERE toInteger(year) >= 2020 RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2020' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0030",
+    "question": "有机储氢领域哪些专利有转让记录？请列出前5项的申请号、标题、摘要和申请日期。？",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '有机储氢'}) WHERE p.transfer_count > 0 RETURN p.application_no AS app_no, p.title_cn AS title, p.abstract_cn AS abstract, p.application_date AS date LIMIT 5",
+    "pred_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '有机储氢'}) WHERE p.transfer_count > 0 RETURN p.application_no AS app_no, p.title_cn AS title, p.abstract_cn AS abstract, p.application_date AS date ORDER BY p.transfer_count DESC LIMIT 5",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0031",
+    "question": "氢燃料电池领域里，有哪些专利发生过诉讼？",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '氢燃料电池'}) WHERE p.litigation_count > 0 RETURN p.application_no AS app_no, p.title_cn AS title, substring(p.application_date, 0, 4) AS year LIMIT 10",
+    "pred_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '氢燃料电池'}), (p)-[:LITIGATED_WITH]->(o) RETURN p.application_no AS app_no, p.title_cn AS title, p.litigation_count AS litigation_count, collect(DISTINCT o.name) AS litigants",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0032",
+    "question": "请问广东省在2021年申请专利数量最多的前15个机构是哪些？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '广东省' AND substring(p.application_date, 0, 4) = '2021' MATCH (p)-[:APPLIED_BY]->(o:Organization) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT 15",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '广东省' AND substring(p.application_date, 0, 4) = '2021' WITH o.name AS org_name, count(DISTINCT p) AS patent_count RETURN org_name, patent_count ORDER BY patent_count DESC LIMIT 15",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0033",
+    "question": "被Tatsuno公司受让的专利有多少项？",
+    "gold_cypher": "MATCH (p:Patent)-[:TRANSFERRED_TO]->(o:Organization) WHERE o.name CONTAINS 'Tatsuno公司' RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent)-[:TRANSFERRED_TO]->(o:Organization) WHERE o.name CONTAINS 'Tatsuno' RETURN count(DISTINCT p) AS patent_count",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0034",
+    "question": "哪些高校申请了制氢技术相关的专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: '高校'}), (p)-[:BELONGS_TO]->(td:TechDomain {name: '制氢技术'}) RETURN p.application_no AS app_no, p.title_cn AS title, substring(p.application_date, 0, 4) AS year LIMIT 20",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization), (p)-[:BELONGS_TO]->(td:TechDomain {name: '制氢技术'}) WHERE o.entity_type = '高校' RETURN DISTINCT o.name AS university ORDER BY university",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0035",
+    "question": "呼伦贝尔市有哪些氢能相关的专利，列出申请号、专利名称和申请年份？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.city = '呼伦贝尔市' RETURN p.application_no AS app_no, p.title_cn AS title, substring(p.application_date, 0, 4) AS year LIMIT 10",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.city = '呼伦贝尔市' RETURN p.application_no AS app_no, p.title_cn AS title, substring(p.application_date, 0, 4) AS year",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0036",
+    "question": "2020年哪十个机构拥有的专利数量最多？",
+    "gold_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) = '2020' MATCH (p)-[:APPLIED_BY]->(o:Organization) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT 10",
+    "pred_cypher": "MATCH (p:Patent)-[:OWNED_BY]->(o:Organization) WHERE substring(p.application_date, 0, 4) = '2020' RETURN o.name AS organization, count(DISTINCT p) AS patent_count ORDER BY patent_count DESC LIMIT 10",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0037",
+    "question": "2014年到2020年间，哪五个机构申请的专利数量最多？",
+    "gold_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) >= '2014' AND substring(p.application_date, 0, 4) <= '2020' MATCH (p)-[:APPLIED_BY]->(o:Organization) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT 5",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization) WHERE substring(p.application_date, 0, 4) >= '2014' AND substring(p.application_date, 0, 4) <= '2020' RETURN o.name AS org_name, count(DISTINCT p) AS patent_count ORDER BY patent_count DESC LIMIT 5",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0038",
+    "question": "湖南省氢燃料电池领域有多少专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '氢燃料电池'}) WHERE loc.province = '湖南省' RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '氢燃料电池'}) WHERE loc.province = '湖南省' RETURN count(DISTINCT p) AS patent_count",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0039",
+    "question": "内蒙古自治区最近申请了哪些专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '内蒙古自治区' RETURN p.application_no AS app_no, p.title_cn AS title, p.application_date AS date ORDER BY p.application_date DESC LIMIT 10",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '内蒙古自治区' RETURN p.application_no AS app_no, p.title_cn AS title, p.application_date AS date ORDER BY p.application_date DESC LIMIT 10",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0040",
+    "question": "2012年各个技术领域的专利数量分别是多少，哪些领域最多？",
+    "gold_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) = '2012' MATCH (p)-[:BELONGS_TO]->(td:TechDomain) WITH td.name AS domain, count(DISTINCT p) AS count RETURN domain, count ORDER BY count DESC",
+    "pred_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain) WHERE substring(p.application_date, 0, 4) = '2012' RETURN td.name AS tech_domain, count(DISTINCT p) AS patent_count ORDER BY patent_count DESC",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0041",
+    "question": "2015年山西省哪些机构的专利申请数量进入了前十五名？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '山西省' AND substring(p.application_date, 0, 4) = '2015' MATCH (p)-[:APPLIED_BY]->(o:Organization) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT 15",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '山西省' AND substring(p.application_date, 0, 4) = '2015' WITH o.name AS org_name, count(DISTINCT p) AS patent_count RETURN org_name, patent_count ORDER BY patent_count DESC LIMIT 15",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0042",
+    "question": "2020年以来河北省每年新增的专利数量是多少？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '河北省' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count WHERE toInteger(year) >= 2020 RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '河北省' AND substring(p.application_date, 0, 4) >= '2020' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0043",
+    "question": "在制氢技术领域，专利数量排前15名的机构是哪些？",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '制氢技术'}) MATCH (p)-[:APPLIED_BY]->(o:Organization) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT 15",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization), (p)-[:BELONGS_TO]->(td:TechDomain {name: '制氢技术'}) WITH o.name AS org_name, count(DISTINCT p) AS patent_count RETURN org_name, patent_count ORDER BY patent_count DESC LIMIT 15",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0044",
+    "question": "江西省物理储氢领域从2018年到现在的专利申请数量每年分别是多少？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '物理储氢'}) WHERE loc.province = '江西省' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count WHERE toInteger(year) >= 2018 RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name: '物理储氢'}) WHERE loc.province = '江西省' AND substring(p.application_date, 0, 4) >= '2018' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0045",
+    "question": "每年有多少有转让记录的专利申请？",
+    "gold_cypher": "MATCH (p:Patent) WHERE p.transfer_count > 0 WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent) WHERE p.transfer_count > 0 WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0046",
+    "question": "2006年氢燃料电池领域一共有多少件专利？",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '氢燃料电池'}) WHERE substring(p.application_date, 0, 4) = '2006' RETURN count(DISTINCT p) AS total",
+    "pred_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '氢燃料电池'}) WHERE substring(p.application_date, 0, 4) = '2006' RETURN count(DISTINCT p) AS patent_count",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0047",
+    "question": "康定市的专利平均被转让了多少次？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.city = '康定市' RETURN round(avg(p.transfer_count) * 100) / 100 AS avg_transfer",
+    "pred_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.city = '康定市' RETURN round(avg(p.transfer_count) * 100) / 100 AS avg_transfer",
+    "correct": true,
+    "executable": true
+  },
+  {
+    "qid": "q0048",
+    "question": "在以色列，申请专利数量最多的前10家机构是哪些？",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.country = '以色列' MATCH (p)-[:APPLIED_BY]->(o:Organization) WITH o.name AS org, count(DISTINCT p) AS count RETURN org, count ORDER BY count DESC LIMIT 10",
+    "pred_cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(c:Country {name: '以色列'}), (p)-[:APPLIED_BY]->(o:Organization) WITH o, count(DISTINCT p) AS patent_count RETURN o.name AS organization, patent_count ORDER BY patent_count DESC LIMIT 10",
+    "correct": false,
+    "executable": true
+  },
+  {
+    "qid": "q0049",
+    "question": "2014年共有多少件专利申请？",
+    "gold_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) = '2014' WITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS count RETURN year, count ORDER BY year",
+    "pred_cypher": "MATCH (p:Patent) WHERE substring(p.application_date, 0, 4) = '2014' RETURN count(DISTINCT p) AS patent_count",
+    "correct": false,
+    "executable": true
+  }
+]

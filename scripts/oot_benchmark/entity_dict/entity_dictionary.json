@@ -1,0 +1,2311 @@
+{
+  "tech_domains": [
+    {
+      "name": "氢能技术",
+      "level": 1,
+      "parent_name": null
+    },
+    {
+      "name": "储氢技术",
+      "level": 2,
+      "parent_name": "氢能技术"
+    },
+    {
+      "name": "制氢技术",
+      "level": 2,
+      "parent_name": "氢能技术"
+    },
+    {
+      "name": "氢制冷",
+      "level": 2,
+      "parent_name": "氢能技术"
+    },
+    {
+      "name": "氢燃料电池",
+      "level": 2,
+      "parent_name": "氢能技术"
+    },
+    {
+      "name": "合金储氢",
+      "level": 3,
+      "parent_name": "储氢技术"
+    },
+    {
+      "name": "无机储氢",
+      "level": 3,
+      "parent_name": "储氢技术"
+    },
+    {
+      "name": "有机储氢",
+      "level": 3,
+      "parent_name": "储氢技术"
+    },
+    {
+      "name": "物理储氢",
+      "level": 3,
+      "parent_name": "储氢技术"
+    }
+  ],
+  "legal_statuses": [
+    {
+      "name": "授权",
+      "patent_count": 47718
+    },
+    {
+      "name": "实质审查",
+      "patent_count": 20707
+    },
+    {
+      "name": "公开",
+      "patent_count": 8412
+    },
+    {
+      "name": "未缴年费",
+      "patent_count": 6372
+    },
+    {
+      "name": "驳回",
+      "patent_count": 6065
+    },
+    {
+      "name": "撤回",
+      "patent_count": 4765
+    },
+    {
+      "name": "进入国家阶段-PCT有效期满",
+      "patent_count": 3640
+    },
+    {
+      "name": "权利终止",
+      "patent_count": 2821
+    },
+    {
+      "name": "未进入国家阶段-PCT有效期满",
+      "patent_count": 1860
+    },
+    {
+      "name": "放弃",
+      "patent_count": 1548
+    },
+    {
+      "name": "未进入国家阶段-PCT有效期内",
+      "patent_count": 1158
+    },
+    {
+      "name": "期限届满",
+      "patent_count": 315
+    },
+    {
+      "name": "避重放弃",
+      "patent_count": 250
+    },
+    {
+      "name": "进入国家阶段-PCT有效期内",
+      "patent_count": 200
+    },
+    {
+      "name": "权利恢复",
+      "patent_count": 104
+    },
+    {
+      "name": "暂缺",
+      "patent_count": 23
+    },
+    {
+      "name": "全部撤销",
+      "patent_count": 20
+    },
+    {
+      "name": "申请终止",
+      "patent_count": 20
+    },
+    {
+      "name": "全部无效",
+      "patent_count": 2
+    },
+    {
+      "name": "部分无效",
+      "patent_count": 2
+    }
+  ],
+  "provinces": [
+    {
+      "province": "江苏省",
+      "org_count": 1680
+    },
+    {
+      "province": "广东省",
+      "org_count": 1333
+    },
+    {
+      "province": "浙江省",
+      "org_count": 948
+    },
+    {
+      "province": "山东省",
+      "org_count": 868
+    },
+    {
+      "province": "上海市",
+      "org_count": 790
+    },
+    {
+      "province": "北京市",
+      "org_count": 669
+    },
+    {
+      "province": "四川省",
+      "org_count": 435
+    },
+    {
+      "province": "湖北省",
+      "org_count": 357
+    },
+    {
+      "province": "安徽省",
+      "org_count": 354
+    },
+    {
+      "province": "陕西省",
+      "org_count": 327
+    },
+    {
+      "province": "河南省",
+      "org_count": 288
+    },
+    {
+      "province": "辽宁省",
+      "org_count": 271
+    },
+    {
+      "province": "河北省",
+      "org_count": 251
+    },
+    {
+      "province": "福建省",
+      "org_count": 246
+    },
+    {
+      "province": "湖南省",
+      "org_count": 232
+    },
+    {
+      "province": "天津市",
+      "org_count": 179
+    },
+    {
+      "province": "重庆市",
+      "org_count": 165
+    },
+    {
+      "province": "内蒙古自治区",
+      "org_count": 151
+    },
+    {
+      "province": "江西省",
+      "org_count": 132
+    },
+    {
+      "province": "山西省",
+      "org_count": 123
+    },
+    {
+      "province": "广西壮族自治区",
+      "org_count": 102
+    },
+    {
+      "province": "云南省",
+      "org_count": 94
+    },
+    {
+      "province": "新疆维吾尔自治区",
+      "org_count": 87
+    },
+    {
+      "province": "黑龙江省",
+      "org_count": 64
+    },
+    {
+      "province": "贵州省",
+      "org_count": 62
+    },
+    {
+      "province": "甘肃省",
+      "org_count": 57
+    },
+    {
+      "province": "吉林省",
+      "org_count": 56
+    },
+    {
+      "province": "宁夏回族自治区",
+      "org_count": 50
+    },
+    {
+      "province": "海南省",
+      "org_count": 46
+    },
+    {
+      "province": "青海省",
+      "org_count": 33
+    }
+  ],
+  "cities": [
+    {
+      "city": "深圳市",
+      "province": "广东省",
+      "org_count": 505
+    },
+    {
+      "city": "苏州市",
+      "province": "江苏省",
+      "org_count": 455
+    },
+    {
+      "city": "上海市",
+      "province": "上海市",
+      "org_count": 450
+    },
+    {
+      "city": "北京市",
+      "province": "北京市",
+      "org_count": 315
+    },
+    {
+      "city": "广州市",
+      "province": "广东省",
+      "org_count": 221
+    },
+    {
+      "city": "南京市",
+      "province": "江苏省",
+      "org_count": 218
+    },
+    {
+      "city": "成都市",
+      "province": "四川省",
+      "org_count": 191
+    },
+    {
+      "city": "武汉市",
+      "province": "湖北省",
+      "org_count": 179
+    },
+    {
+      "city": "杭州市",
+      "province": "浙江省",
+      "org_count": 177
+    },
+    {
+      "city": "青岛市",
+      "province": "山东省",
+      "org_count": 166
+    },
+    {
+      "city": "宁波市",
+      "province": "浙江省",
+      "org_count": 159
+    },
+    {
+      "city": "大连市",
+      "province": "辽宁省",
+      "org_count": 133
+    },
+    {
+      "city": "西安市",
+      "province": "陕西省",
+      "org_count": 131
+    },
+    {
+      "city": "无锡市",
+      "province": "江苏省",
+      "org_count": 128
+    },
+    {
+      "city": "佛山市",
+      "province": "广东省",
+      "org_count": 97
+    },
+    {
+      "city": "常州市",
+      "province": "江苏省",
+      "org_count": 94
+    },
+    {
+      "city": "合肥市",
+      "province": "安徽省",
+      "org_count": 90
+    },
+    {
+      "city": "天津市",
+      "province": "天津市",
+      "org_count": 79
+    },
+    {
+      "city": "南通市",
+      "province": "江苏省",
+      "org_count": 77
+    },
+    {
+      "city": "厦门市",
+      "province": "福建省",
+      "org_count": 72
+    },
+    {
+      "city": "东莞市",
+      "province": "广东省",
+      "org_count": 72
+    },
+    {
+      "city": "重庆市",
+      "province": "重庆市",
+      "org_count": 58
+    },
+    {
+      "city": "郑州市",
+      "province": "河南省",
+      "org_count": 56
+    },
+    {
+      "city": "嘉兴市",
+      "province": "浙江省",
+      "org_count": 54
+    },
+    {
+      "city": "沈阳市",
+      "province": "辽宁省",
+      "org_count": 52
+    },
+    {
+      "city": "烟台市",
+      "province": "山东省",
+      "org_count": 52
+    },
+    {
+      "city": "扬州市",
+      "province": "江苏省",
+      "org_count": 49
+    },
+    {
+      "city": "徐州市",
+      "province": "江苏省",
+      "org_count": 47
+    },
+    {
+      "city": "济南市",
+      "province": "山东省",
+      "org_count": 45
+    },
+    {
+      "city": "绍兴市",
+      "province": "浙江省",
+      "org_count": 45
+    },
+    {
+      "city": "长沙市",
+      "province": "湖南省",
+      "org_count": 40
+    },
+    {
+      "city": "珠海市",
+      "province": "广东省",
+      "org_count": 39
+    },
+    {
+      "city": "湖州市",
+      "province": "浙江省",
+      "org_count": 38
+    },
+    {
+      "city": "潍坊市",
+      "province": "山东省",
+      "org_count": 37
+    },
+    {
+      "city": "温州市",
+      "province": "浙江省",
+      "org_count": 36
+    },
+    {
+      "city": "唐山市",
+      "province": "河北省",
+      "org_count": 35
+    },
+    {
+      "city": "台州市",
+      "province": "浙江省",
+      "org_count": 33
+    },
+    {
+      "city": "哈尔滨市",
+      "province": "黑龙江省",
+      "org_count": 32
+    },
+    {
+      "city": "洛阳市",
+      "province": "河南省",
+      "org_count": 32
+    },
+    {
+      "city": "盐城市",
+      "province": "江苏省",
+      "org_count": 31
+    },
+    {
+      "city": "金华市",
+      "province": "浙江省",
+      "org_count": 30
+    },
+    {
+      "city": "兰州市",
+      "province": "甘肃省",
+      "org_count": 28
+    },
+    {
+      "city": "鄂尔多斯市",
+      "province": "内蒙古自治区",
+      "org_count": 28
+    },
+    {
+      "city": "昆明市",
+      "province": "云南省",
+      "org_count": 27
+    },
+    {
+      "city": "泉州市",
+      "province": "福建省",
+      "org_count": 27
+    },
+    {
+      "city": "中山市",
+      "province": "广东省",
+      "org_count": 27
+    },
+    {
+      "city": "福州市",
+      "province": "福建省",
+      "org_count": 26
+    },
+    {
+      "city": "泰州市",
+      "province": "江苏省",
+      "org_count": 26
+    },
+    {
+      "city": "东营市",
+      "province": "山东省",
+      "org_count": 26
+    },
+    {
+      "city": "衢州市",
+      "province": "浙江省",
+      "org_count": 25
+    }
+  ],
+  "countries": [
+    {
+      "name": "中国",
+      "patent_count": 50519
+    },
+    {
+      "name": "美国",
+      "patent_count": 9048
+    },
+    {
+      "name": "日本",
+      "patent_count": 7649
+    },
+    {
+      "name": "世界知识产权组织(WIPO)",
+      "patent_count": 6882
+    },
+    {
+      "name": "韩国",
+      "patent_count": 6080
+    },
+    {
+      "name": "欧洲专利局",
+      "patent_count": 5840
+    },
+    {
+      "name": "德国",
+      "patent_count": 4869
+    },
+    {
+      "name": "奥地利",
+      "patent_count": 2078
+    },
+    {
+      "name": "加拿大",
+      "patent_count": 1725
+    },
+    {
+      "name": "印度",
+      "patent_count": 1514
+    },
+    {
+      "name": "澳大利亚",
+      "patent_count": 1359
+    },
+    {
+      "name": "巴西",
+      "patent_count": 1052
+    },
+    {
+      "name": "法国",
+      "patent_count": 767
+    },
+    {
+      "name": "中国台湾",
+      "patent_count": 761
+    },
+    {
+      "name": "俄罗斯",
+      "patent_count": 681
+    },
+    {
+      "name": "西班牙",
+      "patent_count": 518
+    },
+    {
+      "name": "英国",
+      "patent_count": 358
+    },
+    {
+      "name": "印度尼西亚",
+      "patent_count": 344
+    },
+    {
+      "name": "墨西哥",
+      "patent_count": 323
+    },
+    {
+      "name": "丹麦",
+      "patent_count": 318
+    }
+  ],
+  "top_orgs_by_patents": [
+    {
+      "name": "罗伯特·博世有限公司",
+      "entity_type": "公司",
+      "patent_count": 1405
+    },
+    {
+      "name": "现代汽车公司",
+      "entity_type": "公司",
+      "patent_count": 1340
+    },
+    {
+      "name": "丰田汽车公司",
+      "entity_type": "公司",
+      "patent_count": 1237
+    },
+    {
+      "name": "液化空气公司",
+      "entity_type": "公司",
+      "patent_count": 907
+    },
+    {
+      "name": "中国科学院大连化学物理研究所",
+      "entity_type": "高校",
+      "patent_count": 872
+    },
+    {
+      "name": "起亚株式会社",
+      "entity_type": "公司",
+      "patent_count": 685
+    },
+    {
+      "name": "北京亿华通科技股份有限公司",
+      "entity_type": "公司",
+      "patent_count": 672
+    },
+    {
+      "name": "托普索公司",
+      "entity_type": "公司",
+      "patent_count": 668
+    },
+    {
+      "name": "本田技研工业株式会社",
+      "entity_type": "公司",
+      "patent_count": 631
+    },
+    {
+      "name": "Panasonic Intellectual Property Management Co.,  Ltd.",
+      "entity_type": "公司",
+      "patent_count": 611
+    },
+    {
+      "name": "松下知识产权管理公司",
+      "entity_type": "公司",
+      "patent_count": 553
+    },
+    {
+      "name": "中国石油化工股份有限公司",
+      "entity_type": "公司",
+      "patent_count": 552
+    },
+    {
+      "name": "起亚汽车公司",
+      "entity_type": "公司",
+      "patent_count": 532
+    },
+    {
+      "name": "液化空气集团",
+      "entity_type": "公司",
+      "patent_count": 438
+    },
+    {
+      "name": "空气化工产品公司",
+      "entity_type": "公司",
+      "patent_count": 425
+    },
+    {
+      "name": "Bosch Gmbh Robert",
+      "entity_type": "公司",
+      "patent_count": 407
+    },
+    {
+      "name": "未势能源科技有限公司",
+      "entity_type": "公司",
+      "patent_count": 384
+    },
+    {
+      "name": "韩国科学技术院",
+      "entity_type": "公司",
+      "patent_count": 383
+    },
+    {
+      "name": "西安交通大学",
+      "entity_type": "高校",
+      "patent_count": 372
+    },
+    {
+      "name": "沙特阿拉伯国家石油公司",
+      "entity_type": "公司",
+      "patent_count": 363
+    },
+    {
+      "name": "中国华能集团清洁能源技术研究院有限公司",
+      "entity_type": "研究机构",
+      "patent_count": 360
+    },
+    {
+      "name": "Casale Sa",
+      "entity_type": "公司",
+      "patent_count": 358
+    },
+    {
+      "name": "Haldor Topsøe A/S",
+      "entity_type": "公司",
+      "patent_count": 356
+    },
+    {
+      "name": "浙江大学",
+      "entity_type": "高校",
+      "patent_count": 349
+    },
+    {
+      "name": "林德公司",
+      "entity_type": "公司",
+      "patent_count": 347
+    },
+    {
+      "name": "华南理工大学",
+      "entity_type": "高校",
+      "patent_count": 332
+    },
+    {
+      "name": "林德股份公司",
+      "entity_type": "公司",
+      "patent_count": 318
+    },
+    {
+      "name": "清华大学",
+      "entity_type": "高校",
+      "patent_count": 318
+    },
+    {
+      "name": "巴斯夫股份公司",
+      "entity_type": "公司",
+      "patent_count": 298
+    },
+    {
+      "name": "同济大学",
+      "entity_type": "高校",
+      "patent_count": 296
+    },
+    {
+      "name": "法国原子能委员会",
+      "entity_type": "公司",
+      "patent_count": 283
+    },
+    {
+      "name": "蒂森克虏伯股份公司",
+      "entity_type": "公司",
+      "patent_count": 280
+    },
+    {
+      "name": "现代自动车株式会社",
+      "entity_type": "公司",
+      "patent_count": 273
+    },
+    {
+      "name": "大连理工大学",
+      "entity_type": "高校",
+      "patent_count": 266
+    },
+    {
+      "name": "法国国家科学研究中心",
+      "entity_type": "公司",
+      "patent_count": 263
+    },
+    {
+      "name": "北京化工大学",
+      "entity_type": "高校",
+      "patent_count": 261
+    },
+    {
+      "name": "旭化成株式会社",
+      "entity_type": "公司",
+      "patent_count": 255
+    },
+    {
+      "name": "原子能和替代能源委员会",
+      "entity_type": "公司",
+      "patent_count": 252
+    },
+    {
+      "name": "西门子能源全球有限公司",
+      "entity_type": "公司",
+      "patent_count": 248
+    },
+    {
+      "name": "福州大学",
+      "entity_type": "高校",
+      "patent_count": 246
+    },
+    {
+      "name": "智能能源有限公司",
+      "entity_type": "公司",
+      "patent_count": 241
+    },
+    {
+      "name": "东芝能源系统与解决方案公司",
+      "entity_type": "公司",
+      "patent_count": 241
+    },
+    {
+      "name": "日本碍子株式会社",
+      "entity_type": "公司",
+      "patent_count": 235
+    },
+    {
+      "name": "天津大学",
+      "entity_type": "高校",
+      "patent_count": 234
+    },
+    {
+      "name": "东芝株式会社",
+      "entity_type": "公司",
+      "patent_count": 229
+    },
+    {
+      "name": "武汉理工大学",
+      "entity_type": "高校",
+      "patent_count": 220
+    },
+    {
+      "name": "上海交通大学",
+      "entity_type": "高校",
+      "patent_count": 220
+    },
+    {
+      "name": "江苏大学",
+      "entity_type": "高校",
+      "patent_count": 216
+    },
+    {
+      "name": "法国原子能和替代能源委员会",
+      "entity_type": "公司",
+      "patent_count": 211
+    },
+    {
+      "name": "韩国能源研究所",
+      "entity_type": "研究机构",
+      "patent_count": 210
+    },
+    {
+      "name": "丰田自动车株式会社",
+      "entity_type": "公司",
+      "patent_count": 209
+    },
+    {
+      "name": "浙江工业大学",
+      "entity_type": "高校",
+      "patent_count": 206
+    },
+    {
+      "name": "东京燃气有限公司",
+      "entity_type": "公司",
+      "patent_count": 201
+    },
+    {
+      "name": "Bloom Energy Corporation",
+      "entity_type": "公司",
+      "patent_count": 193
+    },
+    {
+      "name": "阳光氢能科技有限公司",
+      "entity_type": "公司",
+      "patent_count": 193
+    },
+    {
+      "name": "东风汽车集团股份有限公司",
+      "entity_type": "公司",
+      "patent_count": 191
+    },
+    {
+      "name": "川崎重工业株式会社",
+      "entity_type": "公司",
+      "patent_count": 189
+    },
+    {
+      "name": "一汽解放汽车有限公司",
+      "entity_type": "公司",
+      "patent_count": 188
+    },
+    {
+      "name": "华能集团技术创新中心有限公司",
+      "entity_type": "公司",
+      "patent_count": 187
+    },
+    {
+      "name": "中南大学",
+      "entity_type": "高校",
+      "patent_count": 187
+    },
+    {
+      "name": "华中科技大学",
+      "entity_type": "高校",
+      "patent_count": 185
+    },
+    {
+      "name": "可隆工业公司",
+      "entity_type": "公司",
+      "patent_count": 183
+    },
+    {
+      "name": "LG化学有限公司",
+      "entity_type": "公司",
+      "patent_count": 182
+    },
+    {
+      "name": "庄信万丰公共有限公司",
+      "entity_type": "公司",
+      "patent_count": 181
+    },
+    {
+      "name": "Shell Internationale Research Maatschappij B.V.",
+      "entity_type": "研究机构",
+      "patent_count": 177
+    },
+    {
+      "name": "奥迪股份公司",
+      "entity_type": "公司",
+      "patent_count": 177
+    },
+    {
+      "name": "四川华能氢能科技有限公司",
+      "entity_type": "公司",
+      "patent_count": 175
+    },
+    {
+      "name": "宝马股份公司",
+      "entity_type": "公司",
+      "patent_count": 173
+    },
+    {
+      "name": "哈尔滨工业大学",
+      "entity_type": "高校",
+      "patent_count": 171
+    },
+    {
+      "name": "Nissan Motor Co.,  Ltd.",
+      "entity_type": "公司",
+      "patent_count": 171
+    },
+    {
+      "name": "埃克森美孚研究与工程公司",
+      "entity_type": "公司",
+      "patent_count": 167
+    },
+    {
+      "name": "三菱重工业株式会社",
+      "entity_type": "公司",
+      "patent_count": 167
+    },
+    {
+      "name": "西门子股份公司",
+      "entity_type": "公司",
+      "patent_count": 167
+    },
+    {
+      "name": "国家电投集团氢能科技发展有限公司",
+      "entity_type": "公司",
+      "patent_count": 165
+    },
+    {
+      "name": "中石化炼化工程(集团)股份有限公司",
+      "entity_type": "公司",
+      "patent_count": 163
+    },
+    {
+      "name": "Uop Llc",
+      "entity_type": "公司",
+      "patent_count": 159
+    },
+    {
+      "name": "Toshiba Corp",
+      "entity_type": "公司",
+      "patent_count": 158
+    },
+    {
+      "name": "通用汽车全球技术运营有限责任公司",
+      "entity_type": "公司",
+      "patent_count": 157
+    },
+    {
+      "name": "吉林大学",
+      "entity_type": "高校",
+      "patent_count": 157
+    },
+    {
+      "name": "Fuelcell Energy, Inc.",
+      "entity_type": "公司",
+      "patent_count": 157
+    },
+    {
+      "name": "四川华能康定水电有限责任公司",
+      "entity_type": "公司",
+      "patent_count": 155
+    },
+    {
+      "name": "华能明台电力有限责任公司",
+      "entity_type": "公司",
+      "patent_count": 155
+    },
+    {
+      "name": "中国石油化工股份有限公司石油化工科学研究院",
+      "entity_type": "研究机构",
+      "patent_count": 155
+    },
+    {
+      "name": "四川华能宝兴河水电有限责任公司",
+      "entity_type": "公司",
+      "patent_count": 155
+    },
+    {
+      "name": "四川华能太平驿水电有限责任公司",
+      "entity_type": "公司",
+      "patent_count": 155
+    },
+    {
+      "name": "四川华能嘉陵江水电有限责任公司",
+      "entity_type": "公司",
+      "patent_count": 155
+    },
+    {
+      "name": "四川华能涪江水电有限责任公司",
+      "entity_type": "公司",
+      "patent_count": 155
+    },
+    {
+      "name": "四川华能东西关水电股份有限公司",
+      "entity_type": "公司",
+      "patent_count": 155
+    },
+    {
+      "name": "重庆大学",
+      "entity_type": "高校",
+      "patent_count": 153
+    },
+    {
+      "name": "乔治洛德方法研究和开发液化空气有限公司",
+      "entity_type": "公司",
+      "patent_count": 148
+    },
+    {
+      "name": "四川大学",
+      "entity_type": "高校",
+      "patent_count": 147
+    },
+    {
+      "name": "大阪燃气有限公司",
+      "entity_type": "公司",
+      "patent_count": 146
+    },
+    {
+      "name": "戴姆勒股份公司",
+      "entity_type": "公司",
+      "patent_count": 142
+    },
+    {
+      "name": "陕西科技大学",
+      "entity_type": "高校",
+      "patent_count": 141
+    },
+    {
+      "name": "中国科学技术大学",
+      "entity_type": "高校",
+      "patent_count": 140
+    },
+    {
+      "name": "昭和电工株式会社",
+      "entity_type": "公司",
+      "patent_count": 139
+    },
+    {
+      "name": "北京理工大学",
+      "entity_type": "高校",
+      "patent_count": 137
+    },
+    {
+      "name": "张家港氢云新能源研究院有限公司",
+      "entity_type": "研究机构",
+      "patent_count": 136
+    },
+    {
+      "name": "法国原子能及替代能源委员会",
+      "entity_type": "公司",
+      "patent_count": 136
+    },
+    {
+      "name": "L'air Liquide,  Société Anonyme Pour L'etude Et L'exploitation Des Procédés Georges Claude",
+      "entity_type": "公司",
+      "patent_count": 135
+    }
+  ],
+  "top_orgs_by_transfers": [
+    {
+      "name": "现代汽车公司",
+      "entity_type": "公司",
+      "transfer_count": 456
+    },
+    {
+      "name": "丰田汽车公司",
+      "entity_type": "公司",
+      "transfer_count": 298
+    },
+    {
+      "name": "美国能源部",
+      "entity_type": "公司",
+      "transfer_count": 260
+    },
+    {
+      "name": "起亚株式会社",
+      "entity_type": "公司",
+      "transfer_count": 219
+    },
+    {
+      "name": "起亚汽车公司",
+      "entity_type": "公司",
+      "transfer_count": 168
+    },
+    {
+      "name": "通用汽车全球技术运营有限责任公司",
+      "entity_type": "公司",
+      "transfer_count": 163
+    },
+    {
+      "name": "罗伯特·博世有限公司",
+      "entity_type": "公司",
+      "transfer_count": 157
+    },
+    {
+      "name": "Panasonic Intellectual Property Management Co.,  Ltd.",
+      "entity_type": "公司",
+      "transfer_count": 148
+    },
+    {
+      "name": "沙特阿拉伯国家石油公司",
+      "entity_type": "公司",
+      "transfer_count": 139
+    },
+    {
+      "name": "本田技研工业株式会社",
+      "entity_type": "公司",
+      "transfer_count": 139
+    },
+    {
+      "name": "法国原子能和替代能源委员会",
+      "entity_type": "公司",
+      "transfer_count": 95
+    },
+    {
+      "name": "空气化工产品公司",
+      "entity_type": "公司",
+      "transfer_count": 83
+    },
+    {
+      "name": "蒂森克虏伯股份公司",
+      "entity_type": "公司",
+      "transfer_count": 81
+    },
+    {
+      "name": "奥迪股份公司",
+      "entity_type": "公司",
+      "transfer_count": 79
+    },
+    {
+      "name": "韩国科学技术院",
+      "entity_type": "公司",
+      "transfer_count": 72
+    },
+    {
+      "name": "戴姆勒股份公司",
+      "entity_type": "公司",
+      "transfer_count": 69
+    },
+    {
+      "name": "Cellcentric Gmbh & Co. Kg",
+      "entity_type": "公司",
+      "transfer_count": 67
+    },
+    {
+      "name": "霍尼韦尔国际公司",
+      "entity_type": "公司",
+      "transfer_count": 63
+    },
+    {
+      "name": "西门子能源全球有限公司",
+      "entity_type": "公司",
+      "transfer_count": 63
+    },
+    {
+      "name": "L'air Liquide,  Société Anonyme Pour L'etude Et L'exploitation Des Procédés Georges Claude",
+      "entity_type": "公司",
+      "transfer_count": 62
+    },
+    {
+      "name": "托普索公司",
+      "entity_type": "公司",
+      "transfer_count": 61
+    },
+    {
+      "name": "Bloom Energy Corporation",
+      "entity_type": "公司",
+      "transfer_count": 60
+    },
+    {
+      "name": "林德公司",
+      "entity_type": "公司",
+      "transfer_count": 58
+    },
+    {
+      "name": "Praxair Technology, Inc.",
+      "entity_type": "公司",
+      "transfer_count": 56
+    },
+    {
+      "name": "松下公司",
+      "entity_type": "公司",
+      "transfer_count": 56
+    },
+    {
+      "name": "智能能源有限公司",
+      "entity_type": "公司",
+      "transfer_count": 54
+    },
+    {
+      "name": "四川沃佑达科技有限责任公司",
+      "entity_type": "公司",
+      "transfer_count": 52
+    },
+    {
+      "name": "Uop Llc",
+      "entity_type": "公司",
+      "transfer_count": 51
+    },
+    {
+      "name": "Panasonic Intellectual Property Management Co.,  Lt",
+      "entity_type": "公司",
+      "transfer_count": 50
+    },
+    {
+      "name": "Thyssenkrupp Uhde Gmbh",
+      "entity_type": "公司",
+      "transfer_count": 49
+    },
+    {
+      "name": "Ess Tech,  Inc.",
+      "entity_type": "公司",
+      "transfer_count": 48
+    },
+    {
+      "name": "中国石油化工股份有限公司",
+      "entity_type": "公司",
+      "transfer_count": 47
+    },
+    {
+      "name": "法国国家科学研究中心",
+      "entity_type": "公司",
+      "transfer_count": 44
+    },
+    {
+      "name": "西门子股份公司",
+      "entity_type": "公司",
+      "transfer_count": 43
+    },
+    {
+      "name": "Nuvera Fuel Cells, LLC",
+      "entity_type": "公司",
+      "transfer_count": 43
+    },
+    {
+      "name": "东芝株式会社",
+      "entity_type": "公司",
+      "transfer_count": 43
+    },
+    {
+      "name": "麻省理工学院",
+      "entity_type": "高校",
+      "transfer_count": 43
+    },
+    {
+      "name": "蒂森克虏伯工业解决方案股份公司",
+      "entity_type": "公司",
+      "transfer_count": 43
+    },
+    {
+      "name": "旭化成株式会社",
+      "entity_type": "公司",
+      "transfer_count": 42
+    },
+    {
+      "name": "Nissan Motor Co.,  Ltd.",
+      "entity_type": "公司",
+      "transfer_count": 42
+    },
+    {
+      "name": "林德股份公司",
+      "entity_type": "公司",
+      "transfer_count": 42
+    },
+    {
+      "name": "三星电子有限公司",
+      "entity_type": "公司",
+      "transfer_count": 42
+    },
+    {
+      "name": "Fuelcell Energy, Inc.",
+      "entity_type": "公司",
+      "transfer_count": 41
+    },
+    {
+      "name": "Haldor Topsøe A/S",
+      "entity_type": "公司",
+      "transfer_count": 41
+    },
+    {
+      "name": "巴拉德动力系统公司",
+      "entity_type": "公司",
+      "transfer_count": 40
+    },
+    {
+      "name": "可隆工业公司",
+      "entity_type": "公司",
+      "transfer_count": 39
+    },
+    {
+      "name": "大洋电机燃料电池科技（中山）有限公司",
+      "entity_type": "公司",
+      "transfer_count": 39
+    },
+    {
+      "name": "福特全球技术有限责任公司",
+      "entity_type": "公司",
+      "transfer_count": 38
+    },
+    {
+      "name": "Hydrogenious Lohc Technologies Gmbh",
+      "entity_type": "公司",
+      "transfer_count": 38
+    },
+    {
+      "name": "Faurecia Hydrogen Solutions France",
+      "entity_type": "公司",
+      "transfer_count": 38
+    }
+  ],
+  "top_orgs_by_licenses": [
+    {
+      "name": "苏州竞立制氢设备有限公司",
+      "entity_type": "公司",
+      "license_count": 18
+    },
+    {
+      "name": "中氢新能（深圳）新技术有限公司",
+      "entity_type": "公司",
+      "license_count": 17
+    },
+    {
+      "name": "绍兴天喆能源科技有限公司",
+      "entity_type": "公司",
+      "license_count": 12
+    },
+    {
+      "name": "四川攀研技术有限公司",
+      "entity_type": "公司",
+      "license_count": 12
+    },
+    {
+      "name": "浙江俊吉柯莱特科技有限公司",
+      "entity_type": "公司",
+      "license_count": 12
+    },
+    {
+      "name": "航天氢能科技有限公司",
+      "entity_type": "公司",
+      "license_count": 10
+    },
+    {
+      "name": "广东广晟氢能有限公司",
+      "entity_type": "公司",
+      "license_count": 8
+    },
+    {
+      "name": "北京玉柴兴顺达新能源科技有限公司",
+      "entity_type": "公司",
+      "license_count": 8
+    },
+    {
+      "name": "北京一诺金信科技有限公司",
+      "entity_type": "公司",
+      "license_count": 7
+    },
+    {
+      "name": "浙江天能氢能源科技有限公司",
+      "entity_type": "公司",
+      "license_count": 6
+    },
+    {
+      "name": "广西桂仁节能技术有限公司",
+      "entity_type": "公司",
+      "license_count": 5
+    },
+    {
+      "name": "大连京丰机械制造有限公司",
+      "entity_type": "公司",
+      "license_count": 4
+    },
+    {
+      "name": "深圳秦擎远智科技有限公司",
+      "entity_type": "公司",
+      "license_count": 4
+    },
+    {
+      "name": "桂林青江建设工程有限公司",
+      "entity_type": "公司",
+      "license_count": 4
+    },
+    {
+      "name": "山东长泽新材料科技有限公司",
+      "entity_type": "公司",
+      "license_count": 4
+    },
+    {
+      "name": "新特硅基新材料有限公司",
+      "entity_type": "公司",
+      "license_count": 4
+    },
+    {
+      "name": "国创氢能科技有限公司",
+      "entity_type": "公司",
+      "license_count": 4
+    },
+    {
+      "name": "氢芯科技(无锡)有限公司",
+      "entity_type": "公司",
+      "license_count": 4
+    },
+    {
+      "name": "广西超星太阳能科技有限公司",
+      "entity_type": "公司",
+      "license_count": 4
+    },
+    {
+      "name": "大连金煜新能源有限公司",
+      "entity_type": "公司",
+      "license_count": 4
+    },
+    {
+      "name": "江苏国氢氢能源科技有限公司",
+      "entity_type": "公司",
+      "license_count": 3
+    },
+    {
+      "name": "中关村科技租赁股份有限公司",
+      "entity_type": "公司",
+      "license_count": 3
+    },
+    {
+      "name": "虹芯半导体科技(上海)有限公司",
+      "entity_type": "公司",
+      "license_count": 3
+    },
+    {
+      "name": "苏州弗尔赛能源科技股份有限公司",
+      "entity_type": "公司",
+      "license_count": 3
+    },
+    {
+      "name": "南宁红菱能源科技有限公司",
+      "entity_type": "公司",
+      "license_count": 3
+    },
+    {
+      "name": "内蒙古新特硅材料有限公司",
+      "entity_type": "公司",
+      "license_count": 3
+    },
+    {
+      "name": "浙江畅通科技有限公司",
+      "entity_type": "公司",
+      "license_count": 3
+    },
+    {
+      "name": "山东政尊科技服务有限公司",
+      "entity_type": "公司",
+      "license_count": 3
+    },
+    {
+      "name": "广东耀达融资租赁有限公司",
+      "entity_type": "公司",
+      "license_count": 3
+    },
+    {
+      "name": "深圳市迪斯普设备有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "大连金业电力设备有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "广西漫金节能科技有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "大连宏基电器配件厂",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "民众时代氢能科技(广东)有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "中山骏丰新能源科技有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "天津铸金科技开发股份有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "北海移电新能源科技有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "京准化工技术(上海)有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "碳际新材料（苏州）有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "深圳市帮企科技创新有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "广东清极能源汽车销售服务有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "湖南龙罡智能科技有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "武汉南望环保技术研究有限责任公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "深圳市迷购网络科技有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "深圳市宸大科技有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "山东牛甲汽车科技有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "浙江大维高新技术股份有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "广西科新环境治理有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "湖南轩华锌业有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    },
+    {
+      "name": "山东省临沂市三丰化工有限公司",
+      "entity_type": "公司",
+      "license_count": 2
+    }
+  ],
+  "top_orgs_by_pledges": [
+    {
+      "name": "济南鲁能开源集团有限公司",
+      "entity_type": "公司",
+      "pledge_count": 21
+    },
+    {
+      "name": "武汉农村商业银行股份有限公司经济技术开发区支行",
+      "entity_type": "公司",
+      "pledge_count": 19
+    },
+    {
+      "name": "武汉农村商业银行股份有限公司光谷分行",
+      "entity_type": "公司",
+      "pledge_count": 10
+    },
+    {
+      "name": "阜新银行股份有限公司大连分行",
+      "entity_type": "公司",
+      "pledge_count": 10
+    },
+    {
+      "name": "中国农业银行股份有限公司长兴县支行",
+      "entity_type": "公司",
+      "pledge_count": 8
+    },
+    {
+      "name": "广东南海农村商业银行股份有限公司狮山支行",
+      "entity_type": "公司",
+      "pledge_count": 8
+    },
+    {
+      "name": "佛山农村商业银行股份有限公司澜石支行",
+      "entity_type": "公司",
+      "pledge_count": 7
+    },
+    {
+      "name": "上海银行股份有限公司嘉定支行",
+      "entity_type": "公司",
+      "pledge_count": 7
+    },
+    {
+      "name": "中信银行股份有限公司唐山分行",
+      "entity_type": "公司",
+      "pledge_count": 7
+    },
+    {
+      "name": "江苏银行股份有限公司苏州分行",
+      "entity_type": "公司",
+      "pledge_count": 6
+    },
+    {
+      "name": "中国农业银行股份有限公司上海杨浦支行",
+      "entity_type": "公司",
+      "pledge_count": 6
+    },
+    {
+      "name": "上海浦东发展银行股份有限公司大连分行",
+      "entity_type": "公司",
+      "pledge_count": 6
+    },
+    {
+      "name": "衡水银行股份有限公司",
+      "entity_type": "公司",
+      "pledge_count": 5
+    },
+    {
+      "name": "上海浦东发展银行股份有限公司芜湖分行",
+      "entity_type": "公司",
+      "pledge_count": 5
+    },
+    {
+      "name": "横琴金投国际融资租赁有限公司",
+      "entity_type": "公司",
+      "pledge_count": 5
+    },
+    {
+      "name": "中国建设银行股份有限公司武汉钢城支行",
+      "entity_type": "公司",
+      "pledge_count": 4
+    },
+    {
+      "name": "中国工商银行股份有限公司微山支行",
+      "entity_type": "公司",
+      "pledge_count": 4
+    },
+    {
+      "name": "中国农业银行股份有限公司赣州营业部",
+      "entity_type": "公司",
+      "pledge_count": 4
+    },
+    {
+      "name": "厦门银行股份有限公司",
+      "entity_type": "公司",
+      "pledge_count": 4
+    },
+    {
+      "name": "兴业银行股份有限公司襄阳分行",
+      "entity_type": "公司",
+      "pledge_count": 4
+    },
+    {
+      "name": "中国建设银行股份有限公司大连金普新区分行",
+      "entity_type": "公司",
+      "pledge_count": 4
+    },
+    {
+      "name": "兴业银行股份有限公司大连分行",
+      "entity_type": "公司",
+      "pledge_count": 4
+    },
+    {
+      "name": "合肥兴泰科技小额贷款有限公司",
+      "entity_type": "公司",
+      "pledge_count": 4
+    },
+    {
+      "name": "南京银行股份有限公司上海分行",
+      "entity_type": "公司",
+      "pledge_count": 4
+    },
+    {
+      "name": "山东沂水农村商业银行股份有限公司",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "中关村科技租赁股份有限公司",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "长沙银行股份有限公司宁乡支行",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "金华银行股份有限公司科技支行",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "浙江绍兴瑞丰农村商业银行股份有限公司杨汛桥支行",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "北京海淀科技企业融资担保有限公司",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "厦门陇能融资租赁有限公司",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "广东耀达融资租赁有限公司",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "杭州高科技融资担保有限公司",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "北京银行股份有限公司安华路支行",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "紫金信托有限责任公司",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "中国银行股份有限公司银川市西夏支行",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "中国银行股份有限公司济南高新支行",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "兴业银行股份有限公司武汉分行",
+      "entity_type": "公司",
+      "pledge_count": 3
+    },
+    {
+      "name": "南京银行股份有限公司紫金支行",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "中国农业银行股份有限公司金华婺城支行",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "青岛农村商业银行股份有限公司烟台分行",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "中联重科集团财务有限公司",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "浙江稠州商业银行股份有限公司浦江支行",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "江苏银行股份有限公司无锡分行",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "济南农村商业银行股份有限公司高新支行",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "南京银行股份有限公司北京分行",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "中国银行股份有限公司上海市松江支行",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "上海银行股份有限公司奉贤支行",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "合肥市中小企业融资担保有限公司",
+      "entity_type": "公司",
+      "pledge_count": 2
+    },
+    {
+      "name": "北京农村商业银行股份有限公司海淀新区支行",
+      "entity_type": "公司",
+      "pledge_count": 2
+    }
+  ],
+  "litigation_types": [
+    {
+      "name": "行政案件",
+      "patent_count": 1306
+    },
+    {
+      "name": "无效诉讼",
+      "patent_count": 103
+    },
+    {
+      "name": "其他案件",
+      "patent_count": 13
+    },
+    {
+      "name": "权属案件",
+      "patent_count": 8
+    },
+    {
+      "name": "权属案件, 其他案件",
+      "patent_count": 6
+    },
+    {
+      "name": "行政案件, 其他案件",
+      "patent_count": 6
+    },
+    {
+      "name": "侵权案件",
+      "patent_count": 1
+    },
+    {
+      "name": "侵权案件, 其他案件, 权属案件",
+      "patent_count": 1
+    },
+    {
+      "name": "其他案件, 无效诉讼",
+      "patent_count": 1
+    },
+    {
+      "name": "无效诉讼, 其他案件",
+      "patent_count": 1
+    },
+    {
+      "name": "行政案件, 无效诉讼",
+      "patent_count": 1
+    }
+  ],
+  "ipc_codes": [
+    {
+      "code": "C25B1/04",
+      "description": null,
+      "patent_count": 6223
+    },
+    {
+      "code": "B01J27/24",
+      "description": null,
+      "patent_count": 4167
+    },
+    {
+      "code": "C01B3/38",
+      "description": null,
+      "patent_count": 3496
+    },
+    {
+      "code": "H01M8/04",
+      "description": null,
+      "patent_count": 2489
+    },
+    {
+      "code": "F25J1/02",
+      "description": null,
+      "patent_count": 2341
+    },
+    {
+      "code": "H01M4/88",
+      "description": null,
+      "patent_count": 2173
+    },
+    {
+      "code": "H01M8/04089",
+      "description": null,
+      "patent_count": 2123
+    },
+    {
+      "code": "C01B3/04",
+      "description": null,
+      "patent_count": 2097
+    },
+    {
+      "code": "H01M8/18",
+      "description": null,
+      "patent_count": 2094
+    },
+    {
+      "code": "F17C5/06",
+      "description": null,
+      "patent_count": 2058
+    },
+    {
+      "code": "C01B3/00",
+      "description": null,
+      "patent_count": 1999
+    },
+    {
+      "code": "C01B3/02",
+      "description": null,
+      "patent_count": 1954
+    },
+    {
+      "code": "H01M4/86",
+      "description": null,
+      "patent_count": 1763
+    },
+    {
+      "code": "H01M4/90",
+      "description": null,
+      "patent_count": 1628
+    },
+    {
+      "code": "H01M4/92",
+      "description": null,
+      "patent_count": 1514
+    },
+    {
+      "code": "C25B9/00",
+      "description": null,
+      "patent_count": 1363
+    },
+    {
+      "code": "F17C11/00",
+      "description": null,
+      "patent_count": 1321
+    },
+    {
+      "code": "C01B3/06",
+      "description": null,
+      "patent_count": 1256
+    },
+    {
+      "code": "C01B3/32",
+      "description": null,
+      "patent_count": 1241
+    },
+    {
+      "code": "C25B9/19",
+      "description": null,
+      "patent_count": 1220
+    },
+    {
+      "code": "H01M8/04082",
+      "description": null,
+      "patent_count": 1216
+    },
+    {
+      "code": "C01B3/34",
+      "description": null,
+      "patent_count": 1181
+    },
+    {
+      "code": "C01B3/50",
+      "description": null,
+      "patent_count": 1146
+    },
+    {
+      "code": "H01M8/04007",
+      "description": null,
+      "patent_count": 1107
+    },
+    {
+      "code": "H01M8/04119",
+      "description": null,
+      "patent_count": 1081
+    },
+    {
+      "code": "C25B15/02",
+      "description": null,
+      "patent_count": 1054
+    },
+    {
+      "code": "F17C1/00",
+      "description": null,
+      "patent_count": 1048
+    },
+    {
+      "code": "C25B1/02",
+      "description": null,
+      "patent_count": 1048
+    },
+    {
+      "code": "C25B9/60",
+      "description": null,
+      "patent_count": 998
+    },
+    {
+      "code": "C25B15/08",
+      "description": null,
+      "patent_count": 989
+    }
+  ],
+  "patent_family_stats": [
+    {
+      "min_members": 1,
+      "max_members": 102,
+      "avg_members": 1.366498221007587,
+      "total_families": 77572
+    }
+  ],
+  "sample_families": [
+    {
+      "family_id": "WO2014151182A1",
+      "member_count": 102
+    },
+    {
+      "family_id": "US20200095695A1",
+      "member_count": 30
+    },
+    {
+      "family_id": "AU2016392473B2",
+      "member_count": 28
+    },
+    {
+      "family_id": "JP2019083198A",
+      "member_count": 27
+    },
+    {
+      "family_id": "EP3658492B1",
+      "member_count": 25
+    },
+    {
+      "family_id": "KR1020140009435A",
+      "member_count": 24
+    },
+    {
+      "family_id": "CA3053501A1",
+      "member_count": 24
+    },
+    {
+      "family_id": "RS62944B1",
+      "member_count": 23
+    },
+    {
+      "family_id": "CN118451043A",
+      "member_count": 23
+    },
+    {
+      "family_id": "CN111051573B",
+      "member_count": 23
+    },
+    {
+      "family_id": "AR113273A1",
+      "member_count": 21
+    },
+    {
+      "family_id": "ES2980332T3",
+      "member_count": 21
+    },
+    {
+      "family_id": "AU2020269473B2",
+      "member_count": 21
+    },
+    {
+      "family_id": "CN216638915U",
+      "member_count": 21
+    },
+    {
+      "family_id": "AU2016305138B2",
+      "member_count": 20
+    },
+    {
+      "family_id": "US12031686B2",
+      "member_count": 20
+    },
+    {
+      "family_id": "KR101959186B1",
+      "member_count": 20
+    },
+    {
+      "family_id": "AU2015242943A1",
+      "member_count": 19
+    },
+    {
+      "family_id": "PT3658490T",
+      "member_count": 19
+    },
+    {
+      "family_id": "WO2023094711A1",
+      "member_count": 19
+    }
+  ],
+  "year_distribution": [
+    {
+      "year": "None",
+      "count": 40
+    },
+    {
+      "year": "2025",
+      "count": 3439
+    },
+    {
+      "year": "2024",
+      "count": 10574
+    },
+    {
+      "year": "2023",
+      "count": 13989
+    },
+    {
+      "year": "2022",
+      "count": 14089
+    },
+    {
+      "year": "2021",
+      "count": 11747
+    },
+    {
+      "year": "2020",
+      "count": 8964
+    },
+    {
+      "year": "2019",
+      "count": 8135
+    },
+    {
+      "year": "2018",
+      "count": 7234
+    },
+    {
+      "year": "2017",
+      "count": 6090
+    },
+    {
+      "year": "2016",
+      "count": 5905
+    },
+    {
+      "year": "2015",
+      "count": 4927
+    },
+    {
+      "year": "2014",
+      "count": 3580
+    },
+    {
+      "year": "2013",
+      "count": 2169
+    },
+    {
+      "year": "2012",
+      "count": 1884
+    },
+    {
+      "year": "2011",
+      "count": 1077
+    },
+    {
+      "year": "2010",
+      "count": 654
+    },
+    {
+      "year": "2009",
+      "count": 460
+    },
+    {
+      "year": "2008",
+      "count": 334
+    },
+    {
+      "year": "2007",
+      "count": 216
+    }
+  ],
+  "entity_type_distribution": [
+    {
+      "entity_type": "公司",
+      "count": 19213
+    },
+    {
+      "entity_type": "高校",
+      "count": 2275
+    },
+    {
+      "entity_type": "研究机构",
+      "count": 1119
+    }
+  ],
+  "relationship_counts": [
+    {
+      "rel_type": "APPLIED_BY",
+      "count": 123883
+    },
+    {
+      "rel_type": "OWNED_BY",
+      "count": 122362
+    },
+    {
+      "rel_type": "BELONGS_TO",
+      "count": 106002
+    },
+    {
+      "rel_type": "CLASSIFIED_AS",
+      "count": 106002
+    },
+    {
+      "rel_type": "PUBLISHED_IN",
+      "count": 106002
+    },
+    {
+      "rel_type": "HAS_STATUS",
+      "count": 106002
+    },
+    {
+      "rel_type": "IN_FAMILY",
+      "count": 106002
+    },
+    {
+      "rel_type": "TRANSFERRED_FROM",
+      "count": 32583
+    },
+    {
+      "rel_type": "LOCATED_IN",
+      "count": 18512
+    },
+    {
+      "rel_type": "TRANSFERRED_TO",
+      "count": 17804
+    },
+    {
+      "rel_type": "HAS_LITIGATION_TYPE",
+      "count": 1447
+    },
+    {
+      "rel_type": "LITIGATED_WITH",
+      "count": 1412
+    },
+    {
+      "rel_type": "PARENT_LOCATION",
+      "count": 661
+    },
+    {
+      "rel_type": "LICENSED_TO",
+      "count": 539
+    },
+    {
+      "rel_type": "CURRENT_LICENSED_TO",
+      "count": 528
+    },
+    {
+      "rel_type": "PLEDGED_TO",
+      "count": 425
+    },
+    {
+      "rel_type": "PLEDGED_FROM",
+      "count": 418
+    },
+    {
+      "rel_type": "CURRENT_PLEDGED_TO",
+      "count": 333
+    },
+    {
+      "rel_type": "LICENSED_FROM",
+      "count": 289
+    },
+    {
+      "rel_type": "PARENT_DOMAIN",
+      "count": 8
+    }
+  ]
+}

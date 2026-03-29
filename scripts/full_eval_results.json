@@ -1,0 +1,228 @@
+{
+  "sft": {
+    "by_ndims": {
+      "1": {
+        "total": 254,
+        "strict": 162,
+        "relaxed": 162
+      },
+      "0": {
+        "total": 107,
+        "strict": 74,
+        "relaxed": 74
+      },
+      "2": {
+        "total": 125,
+        "strict": 61,
+        "relaxed": 62
+      },
+      "3": {
+        "total": 14,
+        "strict": 1,
+        "relaxed": 1
+      }
+    },
+    "by_qtype": {
+      "list": {
+        "total": 250,
+        "strict": 129,
+        "relaxed": 130
+      },
+      "ranking": {
+        "total": 163,
+        "strict": 102,
+        "relaxed": 102
+      },
+      "trend": {
+        "total": 34,
+        "strict": 30,
+        "relaxed": 30
+      },
+      "count": {
+        "total": 53,
+        "strict": 37,
+        "relaxed": 37
+      }
+    },
+    "by_template": {
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)": {
+        "total": 82,
+        "strict": 51,
+        "relaxed": 51
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location)": {
+        "total": 106,
+        "strict": 85,
+        "relaxed": 86
+      },
+      "MATCH (p:Patent)": {
+        "total": 93,
+        "strict": 50,
+        "relaxed": 50
+      },
+      "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '?'})": {
+        "total": 66,
+        "strict": 34,
+        "relaxed": 34
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name:": {
+        "total": 57,
+        "strict": 37,
+        "relaxed": 37
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: '?'}), (p)-[:BELONGS_TO]->(td:TechDomain {name: '?'})": {
+        "total": 23,
+        "strict": 0,
+        "relaxed": 0
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: '?'}), (p)-[:BELONGS_TO]->(td:TechDomain {name: '?'}) MATC": {
+        "total": 6,
+        "strict": 0,
+        "relaxed": 0
+      },
+      "MATCH (p:Patent)-[:TRANSFERRED_TO]->(o:Organization)": {
+        "total": 43,
+        "strict": 29,
+        "relaxed": 29
+      },
+      "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '?'}) MATCH (p)-[:APPLIED_BY]->(o:Organization)": {
+        "total": 2,
+        "strict": 2,
+        "relaxed": 2
+      },
+      "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '?'}) MATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(lo": {
+        "total": 1,
+        "strict": 0,
+        "relaxed": 0
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization), (p)-[:BELONGS_TO]->(td:TechDomain {name: '?'})": {
+        "total": 19,
+        "strict": 9,
+        "relaxed": 9
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: '?'})": {
+        "total": 2,
+        "strict": 1,
+        "relaxed": 1
+      }
+    },
+    "total": 500,
+    "strict_ex": 59.599999999999994,
+    "relaxed_ex": 59.8,
+    "near_misses": 1,
+    "executable": 400
+  },
+  "rl": {
+    "by_ndims": {
+      "1": {
+        "total": 254,
+        "strict": 199,
+        "relaxed": 199
+      },
+      "0": {
+        "total": 107,
+        "strict": 74,
+        "relaxed": 74
+      },
+      "2": {
+        "total": 125,
+        "strict": 85,
+        "relaxed": 85
+      },
+      "3": {
+        "total": 14,
+        "strict": 4,
+        "relaxed": 4
+      }
+    },
+    "by_qtype": {
+      "list": {
+        "total": 250,
+        "strict": 153,
+        "relaxed": 153
+      },
+      "ranking": {
+        "total": 163,
+        "strict": 134,
+        "relaxed": 134
+      },
+      "trend": {
+        "total": 34,
+        "strict": 30,
+        "relaxed": 30
+      },
+      "count": {
+        "total": 53,
+        "strict": 45,
+        "relaxed": 45
+      }
+    },
+    "by_template": {
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)": {
+        "total": 82,
+        "strict": 65,
+        "relaxed": 65
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location)": {
+        "total": 106,
+        "strict": 87,
+        "relaxed": 87
+      },
+      "MATCH (p:Patent)": {
+        "total": 93,
+        "strict": 62,
+        "relaxed": 62
+      },
+      "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '?'})": {
+        "total": 66,
+        "strict": 43,
+        "relaxed": 43
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:BELONGS_TO]->(td:TechDomain {name:": {
+        "total": 57,
+        "strict": 47,
+        "relaxed": 47
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: '?'}), (p)-[:BELONGS_TO]->(td:TechDomain {name: '?'})": {
+        "total": 23,
+        "strict": 0,
+        "relaxed": 0
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: '?'}), (p)-[:BELONGS_TO]->(td:TechDomain {name: '?'}) MATC": {
+        "total": 6,
+        "strict": 1,
+        "relaxed": 1
+      },
+      "MATCH (p:Patent)-[:TRANSFERRED_TO]->(o:Organization)": {
+        "total": 43,
+        "strict": 36,
+        "relaxed": 36
+      },
+      "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '?'}) MATCH (p)-[:APPLIED_BY]->(o:Organization)": {
+        "total": 2,
+        "strict": 2,
+        "relaxed": 2
+      },
+      "MATCH (p:Patent)-[:BELONGS_TO]->(td:TechDomain {name: '?'}) MATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(lo": {
+        "total": 1,
+        "strict": 0,
+        "relaxed": 0
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization), (p)-[:BELONGS_TO]->(td:TechDomain {name: '?'})": {
+        "total": 19,
+        "strict": 18,
+        "relaxed": 18
+      },
+      "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization {entity_type: '?'})": {
+        "total": 2,
+        "strict": 1,
+        "relaxed": 1
+      }
+    },
+    "total": 500,
+    "strict_ex": 72.39999999999999,
+    "relaxed_ex": 72.39999999999999,
+    "near_misses": 0,
+    "executable": 465
+  }
+}

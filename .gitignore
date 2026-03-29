@@ -94,3 +94,7 @@ htmlcov/
 # 1_knowledge_graph/output/
 # 2_benchmark_gen/output/raw/
 # 3_model_eval/results/raw/
+dpmlretriever/
+# Non-code files
+*.pdf
+*.png

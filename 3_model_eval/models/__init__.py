@@ -4,6 +4,9 @@ from .base_model import BaseModel, InferenceResult, InferenceMode
 from .local_qwen import LocalQwenModel
 from .deepseek_api import DeepSeekAPIModel
 from .tool_calling_wrapper import ToolCallingWrapper
+from .openrouter_model import OpenRouterModel
+from .repair_model import ExecutionGuidedRepairModel
+from .self_consistency_model import SelfConsistencyModel
 
 
 class ModelFactory:
@@ -14,6 +17,9 @@ class ModelFactory:
         "local_vllm": LocalQwenModel,
         "api": DeepSeekAPIModel,
         "api_with_tools": ToolCallingWrapper,
+        "openrouter": OpenRouterModel,
+        "repair": ExecutionGuidedRepairModel,
+        "self_consistency": SelfConsistencyModel,
     }
 
     @classmethod

@@ -1,0 +1,1491 @@
+[
+  {
+    "id": "oot_071",
+    "question": "请问有哪些专利已经有IPC分类，但完全没有归属任何技术领域（TechDomain）？给我看20条就行。",
+    "cypher": "MATCH (p:Patent)-[:CLASSIFIED_AS]->(:IPCCode)\nWHERE NOT EXISTS { MATCH (p)-[:BELONGS_TO]->(:TechDomain) }\nWITH DISTINCT p\nRETURN p.application_no AS application_no, p.title AS title, substring(p.application_date, 0, 4) AS year\nORDER BY year DESC, application_no\nLIMIT 20",
+    "family": "negation",
+    "dims": [
+      "technical"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_072",
+    "question": "帮忙查一下：浙江省有哪些机构从来没有作为申请人提交过专利？",
+    "cypher": "MATCH (o:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '浙江省'\n  AND NOT EXISTS { MATCH (:Patent)-[:APPLIED_BY]->(o) }\nRETURN o.name AS org, coalesce(loc.city, '未知') AS city\nORDER BY org\nLIMIT 30",
+    "family": "negation",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_073",
+    "question": "我想知道：哪些专利有权利人（OWNED_BY）记录，但没有任何申请人（APPLIED_BY）记录？",
+    "cypher": "MATCH (p:Patent)-[:OWNED_BY]->(o:Organization)\nWHERE NOT EXISTS { MATCH (p)-[:APPLIED_BY]->(:Organization) }\nWITH DISTINCT p, o\nRETURN p.application_no AS application_no, p.title AS title, o.name AS owner\nORDER BY application_no\nLIMIT 20",
+    "family": "negation",
+    "dims": [
+      "organizational",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_074",
+    "question": "调查一下：有没有专利存在诉讼对方（LITIGATED_WITH），但没有标注任何诉讼类型（HAS_LITIGATION_TYPE）？",
+    "cypher": "MATCH (p:Patent)-[:LITIGATED_WITH]->(:Organization)\nWHERE NOT EXISTS { MATCH (p)-[:HAS_LITIGATION_TYPE]->(:LitigationType) }\nWITH DISTINCT p\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "negation",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_075",
+    "question": "能给我列出：已经加入专利族（IN_FAMILY），但没有任何公开国家（PUBLISHED_IN）信息的专利吗？",
+    "cypher": "MATCH (p:Patent)-[:IN_FAMILY]->(:PatentFamily)\nWHERE NOT EXISTS { MATCH (p)-[:PUBLISHED_IN]->(:Country) }\nWITH DISTINCT p\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "negation",
+    "dims": [
+      "business",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_076",
+    "question": "有没有可能找出：已授权的专利中，完全没有H01M前缀IPC分类的那些？",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\nWHERE NOT EXISTS {\n  MATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\n  WHERE ipc.code STARTS WITH 'H01M'\n}\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "negation",
+    "dims": [
+      "technical",
+      "legal"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_077",
+    "question": "请分析：哪些高校机构没有任何人员关联（AFFILIATED_WITH）记录？",
+    "cypher": "MATCH (o:Organization {entity_type:'university'})\nWHERE NOT EXISTS { MATCH (:Person)-[:AFFILIATED_WITH]->(o) }\nRETURN o.name AS university\nORDER BY university\nLIMIT 30",
+    "family": "negation",
+    "dims": [
+      "organizational"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_078",
+    "question": "想了解一下：哪些人虽然关联了机构，但该机构既没有申请过专利也没有作为权利人拥有专利？",
+    "cypher": "MATCH (per:Person)-[:AFFILIATED_WITH]->(o:Organization)\nWHERE NOT EXISTS { MATCH (:Patent)-[:APPLIED_BY]->(o) }\n  AND NOT EXISTS { MATCH (:Patent)-[:OWNED_BY]->(o) }\nRETURN per.name AS person, o.name AS org\nORDER BY org, person\nLIMIT 30",
+    "family": "negation",
+    "dims": [
+      "organizational",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_079",
+    "question": "麻烦统计：有哪些专利出现了质押入方（PLEDGED_TO）但缺失质押出方（PLEDGED_FROM）？",
+    "cypher": "MATCH (p:Patent)-[:PLEDGED_TO]->(:Organization)\nWHERE NOT EXISTS { MATCH (p)-[:PLEDGED_FROM]->(:Organization) }\nWITH DISTINCT p\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "negation",
+    "dims": [
+      "business"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_080",
+    "question": "请问是否存在：只有被许可方（LICENSED_TO）记录、却没有许可方（LICENSED_FROM）记录的专利？",
+    "cypher": "MATCH (p:Patent)-[:LICENSED_TO]->(:Organization)\nWHERE NOT EXISTS { MATCH (p)-[:LICENSED_FROM]->(:Organization) }\nWITH DISTINCT p\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "negation",
+    "dims": [
+      "business"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_081",
+    "question": "能否帮忙查一下：哪些专利只有转让来源（TRANSFERRED_FROM）但没有转让去向（TRANSFERRED_TO）？",
+    "cypher": "MATCH (p:Patent)-[:TRANSFERRED_FROM]->(:Organization)\nWHERE NOT EXISTS { MATCH (p)-[:TRANSFERRED_TO]->(:Organization) }\nWITH DISTINCT p\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "negation",
+    "dims": [
+      "business"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_082",
+    "question": "我想知道：在US公开的专利里，有哪些申请机构缺少所在地（LOCATED_IN）信息？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'US'})\nMATCH (p)-[:APPLIED_BY]->(o:Organization)\nWHERE NOT EXISTS { MATCH (o)-[:LOCATED_IN]->(:Location) }\nRETURN p.application_no AS application_no, p.title AS title, o.name AS applicant\nORDER BY application_no\nLIMIT 20",
+    "family": "negation",
+    "dims": [
+      "geographic",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_083",
+    "question": "有意思的是：哪些C25B类专利没有进入任何专利族（IN_FAMILY）？列一些样例。",
+    "cypher": "MATCH (p:Patent)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'C25B'\n  AND NOT (p)-[:IN_FAMILY]->(:PatentFamily)\nWITH DISTINCT p\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "negation",
+    "dims": [
+      "technical",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_084",
+    "question": "请问北京市有哪些机构从未作为任何专利的权利人（OWNED_BY）出现过？",
+    "cypher": "MATCH (o:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '北京市'\n  AND NOT EXISTS { MATCH (:Patent)-[:OWNED_BY]->(o) }\nRETURN o.name AS org, coalesce(loc.city,'未知') AS city\nORDER BY org\nLIMIT 30",
+    "family": "negation",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_085",
+    "question": "想了解：哪些三级技术域（level=3）目前没有任何专利归属？",
+    "cypher": "MATCH (d:TechDomain {level:3})\nWHERE NOT EXISTS { MATCH (:Patent)-[:BELONGS_TO]->(d) }\nRETURN d.name AS domain_name\nORDER BY domain_name\nLIMIT 30",
+    "family": "negation",
+    "dims": [
+      "technical"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_086",
+    "question": "请帮我找：同时存在权利人（OWNED_BY）和转入方（TRANSFERRED_TO）的专利，并返回两类机构名称。",
+    "cypher": "MATCH (p:Patent)-[:OWNED_BY]->(owner:Organization)\nMATCH (p)-[:TRANSFERRED_TO]->(to:Organization)\nRETURN p.application_no AS application_no, p.title AS title, owner.name AS owner, to.name AS transferred_to\nORDER BY application_no\nLIMIT 30",
+    "family": "co_occurrence",
+    "dims": [
+      "organizational",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_087",
+    "question": "能给我看看：2023年申请的专利里，哪些同时发生过许可（LICENSED_TO）和转让（TRANSFERRED_TO）？",
+    "cypher": "MATCH (p:Patent)\nWHERE substring(p.application_date, 0, 4) = '2023'\n  AND EXISTS { MATCH (p)-[:LICENSED_TO]->(:Organization) }\n  AND EXISTS { MATCH (p)-[:TRANSFERRED_TO]->(:Organization) }\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "business"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_088",
+    "question": "帮忙查一下：哪些专利既被质押（PLEDGED_TO），又标注了诉讼类型为“商业秘密纠纷”？",
+    "cypher": "MATCH (p:Patent)-[:PLEDGED_TO]->(:Organization)\nMATCH (p)-[:HAS_LITIGATION_TYPE]->(:LitigationType {name:'商业秘密纠纷'})\nWITH DISTINCT p\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_089",
+    "question": "我想知道：哪些专利同时被归类到H01M和C25B两个IPC前缀？",
+    "cypher": "MATCH (p:Patent)\nWHERE EXISTS { MATCH (p)-[:CLASSIFIED_AS]->(i1:IPCCode) WHERE i1.code STARTS WITH 'H01M' }\n  AND EXISTS { MATCH (p)-[:CLASSIFIED_AS]->(i2:IPCCode) WHERE i2.code STARTS WITH 'C25B' }\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "technical"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_090",
+    "question": "请分析：哪些专利存在多个法律状态记录，并且同时发生过转让（TRANSFERRED_TO）？",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH p, collect(DISTINCT ls.name) AS statuses\nWHERE size(statuses) >= 2\n  AND EXISTS { MATCH (p)-[:TRANSFERRED_TO]->(:Organization) }\nRETURN p.application_no AS application_no, p.title AS title, statuses\nORDER BY size(statuses) DESC, application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_091",
+    "question": "有没有可能存在：同一家机构既是权利人又是受让方，但申请人却是另一家机构的专利？给我举例。",
+    "cypher": "MATCH (p:Patent)-[:TRANSFERRED_TO]->(x:Organization)\nMATCH (p)-[:OWNED_BY]->(x)\nMATCH (p)-[:APPLIED_BY]->(a:Organization)\nWHERE a <> x\nRETURN p.application_no AS application_no, p.title AS title, a.name AS applicant, x.name AS owner_and_transferee\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "organizational",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_092",
+    "question": "请问哪些专利的许可出方（LICENSED_FROM）与质押出方（PLEDGED_FROM）是同一家机构？",
+    "cypher": "MATCH (p:Patent)-[:LICENSED_FROM]->(s:Organization)\nMATCH (p)-[:PLEDGED_FROM]->(s)\nRETURN p.application_no AS application_no, p.title AS title, s.name AS source_org\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "business",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_093",
+    "question": "想了解：有没有专利在诉讼对方（LITIGATED_WITH）这家机构，刚好也是该专利的受让方（TRANSFERRED_TO）？",
+    "cypher": "MATCH (p:Patent)-[:LITIGATED_WITH]->(o:Organization)\nWHERE EXISTS { MATCH (p)-[:TRANSFERRED_TO]->(o) }\nRETURN p.application_no AS application_no, p.title AS title, o.name AS org\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "legal",
+      "business",
+      "organizational"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_094",
+    "question": "请帮我列出：已授权且标注了诉讼类型，同时又属于某个专利族的专利样例。",
+    "cypher": "MATCH (p:Patent)-[:IN_FAMILY]->(f:PatentFamily)\nMATCH (p)-[:HAS_LITIGATION_TYPE]->(lt:LitigationType)\nMATCH (p)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\nRETURN p.application_no AS application_no, p.title AS title, f.family_id AS family_id, lt.name AS litigation_type\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_095",
+    "question": "帮忙查一下：被“银行”类机构质押（PLEDGED_TO）且法律状态为授权的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:PLEDGED_TO]->(bank:Organization)\nWHERE bank.name CONTAINS '银行'\nMATCH (p)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\nRETURN p.application_no AS application_no, p.title AS title, bank.name AS bank\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "business",
+      "legal",
+      "organizational"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_096",
+    "question": "请问有哪些专利是高校申请（APPLIED_BY=university），但权利人却是公司（OWNED_BY=company）？",
+    "cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(u:Organization {entity_type:'university'})\nMATCH (p)-[:OWNED_BY]->(c:Organization {entity_type:'company'})\nRETURN p.application_no AS application_no, p.title AS title, u.name AS university, c.name AS company_owner\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "organizational",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_097",
+    "question": "想了解：在“有机储氢”领域，哪些专利处于实质审查且IPC前缀为C07？",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(:TechDomain {name:'有机储氢'})\nMATCH (p)-[:HAS_STATUS]->(:LegalStatus {name:'实质审查'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'C07'\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, ipc.code AS ipc\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "technical",
+      "legal"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_098",
+    "question": "能否给我列出：既有转让出方（TRANSFERRED_FROM），又出现被许可方（LICENSED_TO）的专利？",
+    "cypher": "MATCH (p:Patent)-[:TRANSFERRED_FROM]->(from:Organization)\nMATCH (p)-[:LICENSED_TO]->(to:Organization)\nRETURN p.application_no AS application_no, p.title AS title, from.name AS transferred_from, to.name AS licensed_to\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "business",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_099",
+    "question": "我想知道：同一件专利同时发生许可（LICENSED_TO）与质押（PLEDGED_TO），但对象不是同一家机构的情况有哪些？",
+    "cypher": "MATCH (p:Patent)-[:LICENSED_TO]->(l:Organization)\nMATCH (p)-[:PLEDGED_TO]->(g:Organization)\nWHERE l <> g\nRETURN p.application_no AS application_no, p.title AS title, l.name AS licensee, g.name AS pledgee\nORDER BY application_no\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "business",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_100",
+    "question": "请分析：哪些专利转让双方在同一省份但不同城市（基于TRANSFERRED_FROM/TRANSFERRED_TO的机构LOCATED_IN）？",
+    "cypher": "MATCH (p:Patent)-[:TRANSFERRED_FROM]->(from:Organization)-[:LOCATED_IN]->(loc1:Location)\nMATCH (p)-[:TRANSFERRED_TO]->(to:Organization)-[:LOCATED_IN]->(loc2:Location)\nWHERE loc1.province = loc2.province AND loc1.city <> loc2.city\nRETURN p.application_no AS application_no, p.title AS title, loc1.province AS province, loc1.city AS from_city, loc2.city AS to_city\nORDER BY province, from_city, to_city\nLIMIT 20",
+    "family": "co_occurrence",
+    "dims": [
+      "business",
+      "organizational",
+      "geographic"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_101",
+    "question": "我想了解：哪些专利族的所有成员都只在同一个国家公开？并且专利族规模至少3件。",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH f, collect(DISTINCT c.code) AS countries, count(DISTINCT p) AS n\nWHERE n >= 3 AND size(countries) = 1\nRETURN f.family_id AS family_id, n AS family_size, countries[0] AS only_country\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "business",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_102",
+    "question": "请问有哪些专利族同时覆盖“制氢技术”和“储氢技术”两个领域？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:BELONGS_TO]->(d:TechDomain)\nWITH f, collect(DISTINCT d.name) AS domains, count(DISTINCT p) AS n\nWHERE '制氢技术' IN domains AND '储氢技术' IN domains\nRETURN f.family_id AS family_id, n AS family_size, domains\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "technical",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_103",
+    "question": "想知道：哪些专利族同时出现过“授权”和“驳回”的成员状态？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH f, collect(DISTINCT ls.name) AS statuses, count(DISTINCT p) AS n\nWHERE '授权' IN statuses AND '驳回' IN statuses\nRETURN f.family_id AS family_id, n AS family_size, statuses\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_104",
+    "question": "请分析：哪些专利族的IPC前缀（取前4位）至少覆盖4类？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWITH f, collect(DISTINCT substring(ipc.code, 0, 4)) AS prefixes, count(DISTINCT p) AS n\nWHERE size(prefixes) >= 4\nRETURN f.family_id AS family_id, n AS family_size, prefixes\nORDER BY size(prefixes) DESC, family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "technical",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_105",
+    "question": "有没有专利族满足：族内至少一件专利发生过转让（TRANSFERRED_TO），同时族内至少一件专利发生过质押（PLEDGED_TO）？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)\nWITH f, collect(DISTINCT p) AS ps\nWHERE any(x IN ps WHERE EXISTS { MATCH (x)-[:TRANSFERRED_TO]->(:Organization) })\n  AND any(x IN ps WHERE EXISTS { MATCH (x)-[:PLEDGED_TO]->(:Organization) })\nRETURN f.family_id AS family_id, size(ps) AS family_size\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "business"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_106",
+    "question": "请问哪些专利族的所有成员申请机构都来自同一个省份？返回省份信息。",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location)\nWITH f, collect(DISTINCT loc.province) AS provinces, count(DISTINCT p) AS n\nWHERE n > 1 AND size(provinces) = 1\nRETURN f.family_id AS family_id, n AS family_size, provinces[0] AS province\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_107",
+    "question": "我想知道：公开国家至少覆盖3个国家代码的专利族有哪些？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH f, collect(DISTINCT c.code) AS countries, count(DISTINCT p) AS n\nWHERE size(countries) >= 3\nRETURN f.family_id AS family_id, n AS family_size, countries\nORDER BY size(countries) DESC, family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "geographic",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_108",
+    "question": "请分析：哪些专利族的权利人（OWNED_BY）分散度很高，比如至少涉及3家不同机构？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:OWNED_BY]->(o:Organization)\nWITH f, collect(DISTINCT o.name) AS owners, count(DISTINCT p) AS n\nWHERE size(owners) >= 3\nRETURN f.family_id AS family_id, n AS family_size, owners\nORDER BY size(owners) DESC, family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "organizational",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_109",
+    "question": "能否找出：同一个专利族里既有H01M成员又有C25B成员的专利族？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)\nWITH f, collect(DISTINCT p) AS ps\nWHERE any(x IN ps WHERE EXISTS { MATCH (x)-[:CLASSIFIED_AS]->(i:IPCCode) WHERE i.code STARTS WITH 'H01M' })\n  AND any(x IN ps WHERE EXISTS { MATCH (x)-[:CLASSIFIED_AS]->(j:IPCCode) WHERE j.code STARTS WITH 'C25B' })\nRETURN f.family_id AS family_id, size(ps) AS family_size\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "technical",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_110",
+    "question": "请问哪些专利族的申请年份跨度很大（最大年-最小年>=6年）？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)\nWITH f,\n     min(toInteger(substring(p.application_date, 0, 4))) AS minYear,\n     max(toInteger(substring(p.application_date, 0, 4))) AS maxYear,\n     count(DISTINCT p) AS n\nWHERE (maxYear - minYear) >= 6\nRETURN f.family_id AS family_id, n AS family_size, minYear, maxYear, (maxYear - minYear) AS year_span\nORDER BY year_span DESC, family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "business"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_111",
+    "question": "想了解：哪些专利族完全没有“撤回”状态成员？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)\nWITH f, collect(DISTINCT p) AS ps\nWHERE none(x IN ps WHERE EXISTS { MATCH (x)-[:HAS_STATUS]->(:LegalStatus {name:'撤回'}) })\nRETURN f.family_id AS family_id, size(ps) AS family_size\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_112",
+    "question": "请问有没有专利族满足：族内每个成员都有至少一个IPC分类？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)\nWITH f, collect(DISTINCT p) AS ps\nWHERE all(x IN ps WHERE EXISTS { MATCH (x)-[:CLASSIFIED_AS]->(:IPCCode) })\nRETURN f.family_id AS family_id, size(ps) AS family_size\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "technical",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_113",
+    "question": "我想知道“中车株洲电力机车研究所有限公司”作为权利人时，专利分布在哪些专利族？返回专利族列表和数量。",
+    "cypher": "MATCH (o:Organization {name:'中车株洲电力机车研究所有限公司'})<-[:OWNED_BY]-(p:Patent)-[:IN_FAMILY]->(f:PatentFamily)\nWITH o, collect(DISTINCT f.family_id) AS families, count(DISTINCT p) AS owned_patents\nRETURN o.name AS org, owned_patents, families, size(families) AS n_families\nLIMIT 1",
+    "family": "family_reasoning",
+    "dims": [
+      "organizational",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_114",
+    "question": "请分析：哪些专利族同时包含公司申请的成员和高校申请的成员？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:APPLIED_BY]->(o:Organization)\nWITH f, collect(DISTINCT o.entity_type) AS types, count(DISTINCT p) AS n\nWHERE 'company' IN types AND 'university' IN types\nRETURN f.family_id AS family_id, n AS family_size, types\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "organizational",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_115",
+    "question": "想了解：哪些专利族的公开国家全部限定在中日韩（CN/JP/KR），且至少覆盖其中2个国家？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH f, collect(DISTINCT c.code) AS codes, count(DISTINCT p) AS n\nWHERE n > 0\n  AND all(code IN codes WHERE code IN ['CN','JP','KR'])\n  AND size(codes) >= 2\nRETURN f.family_id AS family_id, n AS family_size, codes AS countries\nORDER BY size(codes) DESC, family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "geographic",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_116",
+    "question": "我想知道：哪些专利族里至少有一件成员发生许可（LICENSED_TO），并且该专利族至少跨2个公开国家？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)\nWITH f, collect(DISTINCT p) AS ps\nWHERE any(x IN ps WHERE EXISTS { MATCH (x)-[:LICENSED_TO]->(:Organization) })\nMATCH (f)<-[:IN_FAMILY]-(:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH f, ps, collect(DISTINCT c.code) AS countries\nWHERE size(countries) >= 2\nRETURN f.family_id AS family_id, size(ps) AS family_size, countries\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "business",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_117",
+    "question": "请问哪些专利族内出现了至少两种不同诉讼类型？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:HAS_LITIGATION_TYPE]->(lt:LitigationType)\nWITH f, collect(DISTINCT lt.name) AS types, count(DISTINCT p) AS n\nWHERE size(types) >= 2\nRETURN f.family_id AS family_id, n AS family_size, types AS litigation_types\nORDER BY size(types) DESC, family_size DESC\nLIMIT 20",
+    "family": "family_reasoning",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_118",
+    "question": "请问在KR公开的专利里，有哪些权利人位于山东省？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'KR'})\nMATCH (p)-[:OWNED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '山东省'\nRETURN p.application_no AS application_no, p.title AS title, o.name AS owner, coalesce(loc.city,'未知') AS city\nORDER BY application_no\nLIMIT 20",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_119",
+    "question": "麻烦统计：在CN公开的专利中，有多少转让给了位于美国的机构（根据TRANSFERRED_TO机构所在地country=美国）？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'CN'})\nMATCH (p)-[:TRANSFERRED_TO]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.country = '美国'\nRETURN count(DISTINCT p) AS cnt",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_120",
+    "question": "想了解：湖北省机构拥有（OWNED_BY）的专利在EP或DE公开的分别有多少？按机构+国家返回。",
+    "cypher": "MATCH (o:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '湖北省'\nMATCH (p:Patent)-[:OWNED_BY]->(o)-[:PUBLISHED_IN]->(c:Country)\nWHERE c.code IN ['EP','DE']\nRETURN o.name AS org, c.code AS country, count(DISTINCT p) AS cnt\nORDER BY cnt DESC\nLIMIT 30",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_121",
+    "question": "请分析：在GB公开的专利里，申请机构在中国但权利人不在中国的有哪些？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'GB'})\nMATCH (p)-[:APPLIED_BY]->(a:Organization)-[:LOCATED_IN]->(al:Location)\nMATCH (p)-[:OWNED_BY]->(o:Organization)-[:LOCATED_IN]->(ol:Location)\nWHERE al.country = '中国' AND ol.country <> '中国'\nRETURN p.application_no AS application_no, p.title AS title, a.name AS applicant, o.name AS owner, ol.country AS owner_country\nORDER BY application_no\nLIMIT 20",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_122",
+    "question": "我想知道：境外公开（非CN）且已授权的专利，主要来自哪些省份的申请机构？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(c:Country)\nWHERE c.code <> 'CN'\nMATCH (p)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\nMATCH (p)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nRETURN loc.province AS province, count(DISTINCT p) AS authorized_abroad\nORDER BY authorized_abroad DESC\nLIMIT 20",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "legal",
+      "organizational"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_123",
+    "question": "请问在CN公开的专利中，有哪些申请机构所在地省份是“香港特别行政区”？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'CN'})\nMATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '香港特别行政区'\nRETURN p.application_no AS application_no, p.title AS title, o.name AS applicant\nORDER BY application_no\nLIMIT 20",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_124",
+    "question": "调查一下：公开国家既不等于申请机构所在国家、也不等于权利人所在国家的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(c:Country)\nMATCH (p)-[:APPLIED_BY]->(a:Organization)-[:LOCATED_IN]->(al:Location)\nMATCH (p)-[:OWNED_BY]->(o:Organization)-[:LOCATED_IN]->(ol:Location)\nWHERE c.name <> al.country AND c.name <> ol.country\nRETURN p.application_no AS application_no, p.title AS title, c.name AS published_country, al.country AS applicant_country, ol.country AS owner_country\nORDER BY application_no\nLIMIT 20",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_125",
+    "question": "想了解：US公开且申请机构在江苏省，同时诉讼对方机构也位于美国的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'US'})\nMATCH (p)-[:APPLIED_BY]->(a:Organization)-[:LOCATED_IN]->(al:Location)\nWHERE al.province = '江苏省'\nMATCH (p)-[:LITIGATED_WITH]->(opp:Organization)-[:LOCATED_IN]->(ol:Location)\nWHERE ol.country = '美国'\nRETURN p.application_no AS application_no, p.title AS title, a.name AS applicant, opp.name AS opponent\nORDER BY application_no\nLIMIT 20",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "legal",
+      "business"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_126",
+    "question": "请问在JP公开且IPC含H01M前缀的专利中，哪些是辽宁省机构申请的？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'JP'})\nMATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '辽宁省'\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'H01M'\nWITH p, o, loc, collect(DISTINCT ipc.code) AS ipcs\nRETURN p.application_no AS application_no, p.title AS title, o.name AS applicant, coalesce(loc.city,'未知') AS city, ipcs\nORDER BY application_no\nLIMIT 20",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "technical",
+      "business"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_127",
+    "question": "我想知道：重庆市各城市申请的专利中，境外公开（非CN）数量最多的是哪些城市？",
+    "cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '重庆市'\nMATCH (p)-[:PUBLISHED_IN]->(c:Country)\nWHERE c.code <> 'CN'\nRETURN coalesce(loc.city,'未知') AS city, count(DISTINCT p) AS abroad_cnt\nORDER BY abroad_cnt DESC\nLIMIT 15",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_128",
+    "question": "请分析：在DE公开但受让方（TRANSFERRED_TO）机构位于北京市的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'DE'})\nMATCH (p)-[:TRANSFERRED_TO]->(o:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '北京市'\nRETURN p.application_no AS application_no, p.title AS title, o.name AS transferee\nORDER BY application_no\nLIMIT 20",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_129",
+    "question": "想了解：在CN公开的专利中，申请机构城市与权利人城市不一致的最常见城市对有哪些？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'CN'})\nMATCH (p)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(al:Location)\nMATCH (p)-[:OWNED_BY]->(:Organization)-[:LOCATED_IN]->(ol:Location)\nWHERE al.city IS NOT NULL AND ol.city IS NOT NULL AND al.city <> ol.city\nRETURN al.city AS applicant_city, ol.city AS owner_city, count(DISTINCT p) AS cnt\nORDER BY cnt DESC\nLIMIT 20",
+    "family": "jurisdiction",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_130",
+    "question": "请问有哪些专利处于“终止”状态但仍然发生过转让（TRANSFERRED_TO）？列些样例。",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'终止'})\nWHERE EXISTS { MATCH (p)-[:TRANSFERRED_TO]->(:Organization) }\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_131",
+    "question": "我想知道：潍柴动力股份有限公司作为权利人的专利，法律状态分布是怎样的？",
+    "cypher": "MATCH (o:Organization {name:'潍柴动力股份有限公司'})<-[:OWNED_BY]-(p:Patent)\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH o, coalesce(ls.name, '未知') AS status, count(DISTINCT p) AS cnt\nRETURN o.name AS org, status, cnt\nORDER BY cnt DESC\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_132",
+    "question": "请帮忙查一下：无机储氢领域、CN公开、处于实质审查且IPC以F17C开头的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(:TechDomain {name:'无机储氢'})\nMATCH (p)-[:HAS_STATUS]->(:LegalStatus {name:'实质审查'})\nMATCH (p)-[:PUBLISHED_IN]->(:Country {code:'CN'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'F17C'\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, ipc.code AS ipc\nORDER BY application_no\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "technical",
+      "legal",
+      "geographic"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_133",
+    "question": "想了解：US公开且被驳回的专利中，哪些IPC属于H01M前缀？",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'驳回'})\nMATCH (p)-[:PUBLISHED_IN]->(:Country {code:'US'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'H01M'\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, ipc.code AS ipc\nORDER BY application_no\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "technical",
+      "legal",
+      "geographic"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_134",
+    "question": "麻烦统计：氢制冷领域处于“实质审查”的专利按申请年份的数量走势。",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(:TechDomain {name:'氢制冷'})\nMATCH (p)-[:HAS_STATUS]->(:LegalStatus {name:'实质审查'})\nWITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS cnt\nRETURN year, cnt\nORDER BY year DESC\nLIMIT 15",
+    "family": "legal_aware",
+    "dims": [
+      "technical",
+      "legal"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_135",
+    "question": "我想知道：2022年申请且被驳回的专利里，有哪些还发生过许可（LICENSED_TO）？",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'驳回'})\nWHERE substring(p.application_date, 0, 4) = '2022'\n  AND EXISTS { MATCH (p)-[:LICENSED_TO]->(:Organization) }\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_136",
+    "question": "请问是否存在：同一件专利同时出现“授权”和“无效”两种法律状态记录？列出样例。",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH p, collect(DISTINCT ls.name) AS statuses\nWHERE '授权' IN statuses AND '无效' IN statuses\nRETURN p.application_no AS application_no, p.title AS title, statuses\nORDER BY application_no\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_137",
+    "question": "请分析：高校作为权利人的授权专利最多的是哪些高校？",
+    "cypher": "MATCH (u:Organization {entity_type:'university'})<-[:OWNED_BY]-(p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\nRETURN u.name AS university, count(DISTINCT p) AS authorized_cnt\nORDER BY authorized_cnt DESC\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_138",
+    "question": "想了解：处于撤回状态的专利中，哪些是在境外（非CN）公开的？按国家统计。",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'撤回'})\nMATCH (p)-[:PUBLISHED_IN]->(c:Country)\nWHERE c.code <> 'CN'\nRETURN c.code AS country, count(DISTINCT p) AS withdrawn_abroad\nORDER BY withdrawn_abroad DESC\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_139",
+    "question": "我想知道：氢燃料电池领域、处于实质审查且在诉讼中担任“被告”（role=被告）的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(:TechDomain {name:'氢燃料电池'})\nMATCH (p)-[:HAS_STATUS]->(:LegalStatus {name:'实质审查'})\nMATCH (p)-[lw:LITIGATED_WITH]->(opp:Organization)\nWHERE lw.role = '被告'\nRETURN p.application_no AS application_no, p.title AS title, opp.name AS opponent\nORDER BY application_no\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal",
+      "technical",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_140",
+    "question": "请分析：被驳回的专利中，哪些所在专利族里还存在已授权成员？",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'驳回'})\nMATCH (p)-[:IN_FAMILY]->(f:PatentFamily)\nWHERE EXISTS {\n  MATCH (f)<-[:IN_FAMILY]-(p2:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\n}\nRETURN p.application_no AS application_no, p.title AS title, f.family_id AS family_id\nORDER BY application_no\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_141",
+    "question": "请问已授权专利中，诉讼类型（若有）最常见的是哪些？",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\nOPTIONAL MATCH (p)-[:HAS_LITIGATION_TYPE]->(lt:LitigationType)\nWITH coalesce(lt.name, '无诉讼类型') AS litigation_type, count(DISTINCT p) AS cnt\nRETURN litigation_type, cnt\nORDER BY cnt DESC\nLIMIT 15",
+    "family": "legal_aware",
+    "dims": [
+      "legal"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_142",
+    "question": "想了解：处于实质审查状态、且转让给广东省机构的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'实质审查'})\nMATCH (p)-[:TRANSFERRED_TO]->(o:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '广东省'\nRETURN p.application_no AS application_no, p.title AS title, o.name AS transferred_to, coalesce(loc.city,'未知') AS city\nORDER BY application_no\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal",
+      "business",
+      "geographic",
+      "organizational"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_143",
+    "question": "请帮忙查一下：撤回状态的专利中，哪些仍然被“银行”质押（PLEDGED_TO）？",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'撤回'})\nMATCH (p)-[:PLEDGED_TO]->(bank:Organization)\nWHERE bank.name CONTAINS '银行'\nRETURN p.application_no AS application_no, p.title AS title, bank.name AS bank\nORDER BY application_no\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal",
+      "business",
+      "organizational"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_144",
+    "question": "请分析：2023年授权且IPC以C25B开头的专利，主要来自哪些省份的申请机构？",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\nWHERE substring(p.application_date, 0, 4) = '2023'\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'C25B'\nMATCH (p)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nRETURN loc.province AS province, count(DISTINCT p) AS cnt\nORDER BY cnt DESC\nLIMIT 20",
+    "family": "legal_aware",
+    "dims": [
+      "legal",
+      "technical",
+      "geographic",
+      "organizational"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_145",
+    "question": "帮忙查一下：陕西省机构申请的制氢技术专利中，IPC以B01J开头的有哪些？",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(:TechDomain {name:'制氢技术'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'B01J'\nMATCH (p)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '陕西省'\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, ipc.code AS ipc, coalesce(loc.city,'未知') AS city\nORDER BY application_no\nLIMIT 20",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "organizational",
+      "geographic"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_146",
+    "question": "麻烦统计：在CN公开且IPC以G01N开头的专利，按申请年份分别有多少？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'CN'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'G01N'\nWITH substring(p.application_date, 0, 4) AS year, count(DISTINCT p) AS cnt\nRETURN year, cnt\nORDER BY year DESC\nLIMIT 15",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_147",
+    "question": "想了解：IPC以F16L开头且发生过质押（PLEDGED_TO）的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'F16L'\nMATCH (p)-[:PLEDGED_TO]->(o:Organization)\nRETURN p.application_no AS application_no, p.title AS title, ipc.code AS ipc, o.name AS pledgee\nORDER BY application_no\nLIMIT 20",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "business",
+      "organizational"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_148",
+    "question": "请问氢燃料电池领域中，拥有H02J前缀IPC专利最多的权利人是谁？返回TOP20。",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(:TechDomain {name:'氢燃料电池'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'H02J'\nMATCH (p)-[:OWNED_BY]->(o:Organization)\nRETURN o.name AS owner, count(DISTINCT p) AS cnt\nORDER BY cnt DESC\nLIMIT 20",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_149",
+    "question": "我想知道：哪些专利同时被归类到C01B和B01J两个IPC前缀？",
+    "cypher": "MATCH (p:Patent)\nWHERE EXISTS { MATCH (p)-[:CLASSIFIED_AS]->(i1:IPCCode) WHERE i1.code STARTS WITH 'C01B' }\n  AND EXISTS { MATCH (p)-[:CLASSIFIED_AS]->(i2:IPCCode) WHERE i2.code STARTS WITH 'B01J' }\nRETURN p.application_no AS application_no, p.title AS title\nORDER BY application_no\nLIMIT 20",
+    "family": "ipc_driven",
+    "dims": [
+      "technical"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_150",
+    "question": "请分析：发生过许可（LICENSED_TO）的专利里，最常出现的IPC分类有哪些？",
+    "cypher": "MATCH (p:Patent)-[:LICENSED_TO]->(:Organization)\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nRETURN ipc.code AS ipc, count(DISTINCT p) AS licensed_patents\nORDER BY licensed_patents DESC\nLIMIT 15",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_151",
+    "question": "想了解：有机储氢领域、在EP公开且IPC以C07C开头的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(:TechDomain {name:'有机储氢'})\nMATCH (p)-[:PUBLISHED_IN]->(:Country {code:'EP'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'C07C'\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, ipc.code AS ipc\nORDER BY application_no\nLIMIT 20",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_152",
+    "question": "麻烦统计：授权专利中，IPC以F17C开头的专利主要来自哪些省份？",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'F17C'\nMATCH (p)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nRETURN loc.province AS province, count(DISTINCT p) AS cnt\nORDER BY cnt DESC\nLIMIT 20",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "legal",
+      "geographic"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_153",
+    "question": "我想知道：诉讼类型为侵权诉讼的专利里，哪些IPC含H01M前缀？",
+    "cypher": "MATCH (p:Patent)-[:HAS_LITIGATION_TYPE]->(:LitigationType {name:'侵权诉讼'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'H01M'\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, ipc.code AS ipc\nORDER BY application_no\nLIMIT 20",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "legal"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_154",
+    "question": "请问IPC以Y02E开头且已授权的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'Y02E'\nMATCH (p)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, ipc.code AS ipc\nORDER BY application_no\nLIMIT 20",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "legal"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_155",
+    "question": "想了解：IPC以C25B开头且转让给广东省机构的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'C25B'\nMATCH (p)-[:TRANSFERRED_TO]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '广东省'\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, ipc.code AS ipc, coalesce(loc.city,'未知') AS city\nORDER BY application_no\nLIMIT 20",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "business",
+      "geographic",
+      "organizational"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_156",
+    "question": "请问在CN公开的氢燃料电池专利中，IPC以B60L开头的有哪些？",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(:TechDomain {name:'氢燃料电池'})\nMATCH (p)-[:PUBLISHED_IN]->(:Country {code:'CN'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'B60L'\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, ipc.code AS ipc\nORDER BY application_no\nLIMIT 20",
+    "family": "ipc_driven",
+    "dims": [
+      "technical",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_157",
+    "question": "请分析各省：以申请机构所在地为准，储氢技术（含其子域）专利占该省全部氢能专利的比例是多少？",
+    "cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nWITH loc.province AS province, collect(DISTINCT p) AS ps\nWITH province,\n     size(ps) AS total,\n     size([x IN ps WHERE EXISTS {\n       MATCH (x)-[:BELONGS_TO]->(d:TechDomain)-[:PARENT_DOMAIN*0..]->(:TechDomain {name:'储氢技术'})\n     }]) AS storage_cnt\nRETURN province, total, storage_cnt,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(storage_cnt) / total END AS storage_share\nORDER BY storage_share DESC\nLIMIT 20",
+    "family": "ratio_comparison",
+    "dims": [
+      "technical",
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_158",
+    "question": "想了解：在CN公开的专利里，公司与高校的授权率分别是多少？（授权数/总数）",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'CN'})\nMATCH (p)-[:APPLIED_BY]->(o:Organization)\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH o.entity_type AS type,\n     count(DISTINCT p) AS total,\n     count(DISTINCT CASE WHEN ls.name = '授权' THEN p END) AS authorized\nWHERE type IN ['company','university']\nRETURN type, total, authorized,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(authorized) / total END AS auth_rate\nORDER BY auth_rate DESC",
+    "family": "ratio_comparison",
+    "dims": [
+      "legal",
+      "organizational",
+      "geographic"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_159",
+    "question": "请问广东省各城市申请的专利中，境外公开（非CN）的占比各是多少？",
+    "cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '广东省'\nMATCH (p)-[:PUBLISHED_IN]->(c:Country)\nWITH coalesce(loc.city,'未知') AS city,\n     count(DISTINCT p) AS total,\n     count(DISTINCT CASE WHEN c.code <> 'CN' THEN p END) AS abroad\nRETURN city, total, abroad,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(abroad) / total END AS abroad_share\nORDER BY abroad_share DESC\nLIMIT 20",
+    "family": "ratio_comparison",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_160",
+    "question": "请分析名称包含“能源”的机构：其拥有专利数/申请专利数的比值是多少？返回TOP20。",
+    "cypher": "MATCH (o:Organization)\nWHERE o.name CONTAINS '能源'\nOPTIONAL MATCH (pA:Patent)-[:APPLIED_BY]->(o)\nOPTIONAL MATCH (pO:Patent)-[:OWNED_BY]->(o)\nWITH o, count(DISTINCT pA) AS applied, count(DISTINCT pO) AS owned\nRETURN o.name AS org, applied, owned,\n       CASE WHEN applied = 0 THEN null ELSE toFloat(owned) / applied END AS owned_to_applied\nORDER BY owned_to_applied DESC\nLIMIT 20",
+    "family": "ratio_comparison",
+    "dims": [
+      "organizational",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_161",
+    "question": "我想知道：H01M类专利的涉诉率与非H01M专利的涉诉率对比如何？",
+    "cypher": "MATCH (p:Patent)\nWITH p,\n     CASE WHEN EXISTS { MATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode) WHERE ipc.code STARTS WITH 'H01M' }\n          THEN 'H01M' ELSE '非H01M' END AS grp\nWITH grp, collect(DISTINCT p) AS ps\nWITH grp,\n     size(ps) AS total,\n     size([x IN ps WHERE EXISTS { MATCH (x)-[:LITIGATED_WITH]->(:Organization) }]) AS litigated\nRETURN grp, total, litigated,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(litigated) / total END AS litigation_rate\nORDER BY litigation_rate DESC",
+    "family": "ratio_comparison",
+    "dims": [
+      "technical",
+      "legal"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_162",
+    "question": "请分析：按申请年份统计，进入专利族（IN_FAMILY）的比例是多少？",
+    "cypher": "MATCH (p:Patent)\nWITH substring(p.application_date, 0, 4) AS year, collect(DISTINCT p) AS ps\nWITH year,\n     size(ps) AS total,\n     size([x IN ps WHERE EXISTS { MATCH (x)-[:IN_FAMILY]->(:PatentFamily) }]) AS in_family\nRETURN year, total, in_family,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(in_family) / total END AS family_rate\nORDER BY year DESC\nLIMIT 15",
+    "family": "ratio_comparison",
+    "dims": [
+      "business"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_163",
+    "question": "想了解：制氢技术 vs 储氢技术，两类专利平均每件包含多少个IPC分类？",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(d:TechDomain)\nWHERE d.name IN ['制氢技术','储氢技术']\nOPTIONAL MATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWITH d.name AS domain, p, count(DISTINCT ipc) AS ipc_cnt\nWITH domain, avg(ipc_cnt) AS avg_ipc_cnt, count(DISTINCT p) AS patents\nRETURN domain, patents, avg_ipc_cnt\nORDER BY avg_ipc_cnt DESC",
+    "family": "ratio_comparison",
+    "dims": [
+      "technical"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_164",
+    "question": "请分析各省：发生过任一业务事件（转让/许可/质押）的专利占比是多少？",
+    "cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nWITH loc.province AS province, collect(DISTINCT p) AS ps\nWITH province,\n     size(ps) AS total,\n     size([x IN ps WHERE\n       EXISTS { MATCH (x)-[:TRANSFERRED_TO]->(:Organization) } OR\n       EXISTS { MATCH (x)-[:LICENSED_TO]->(:Organization) } OR\n       EXISTS { MATCH (x)-[:PLEDGED_TO]->(:Organization) }\n     ]) AS with_event\nRETURN province, total, with_event,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(with_event) / total END AS event_rate\nORDER BY event_rate DESC\nLIMIT 20",
+    "family": "ratio_comparison",
+    "dims": [
+      "business",
+      "geographic",
+      "organizational"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_165",
+    "question": "我想知道：在CN/JP/KR公开的专利，各自授权率是多少？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(c:Country)\nWHERE c.code IN ['CN','JP','KR']\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH c.code AS country,\n     count(DISTINCT p) AS total,\n     count(DISTINCT CASE WHEN ls.name = '授权' THEN p END) AS authorized\nRETURN country, total, authorized,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(authorized) / total END AS auth_rate\nORDER BY auth_rate DESC",
+    "family": "ratio_comparison",
+    "dims": [
+      "legal",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_166",
+    "question": "请分析：按二级技术域（若有父域取父域）统计驳回率（驳回数/总数）。",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(d:TechDomain)\nOPTIONAL MATCH (d)-[:PARENT_DOMAIN]->(parent:TechDomain)\nWITH p, coalesce(parent, d) AS grp\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH grp.name AS domain,\n     count(DISTINCT p) AS total,\n     count(DISTINCT CASE WHEN ls.name = '驳回' THEN p END) AS rejected\nRETURN domain, total, rejected,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(rejected) / total END AS reject_rate\nORDER BY reject_rate DESC\nLIMIT 20",
+    "family": "ratio_comparison",
+    "dims": [
+      "technical",
+      "legal"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_167",
+    "question": "想了解：不同机构类型（company/university/institute）的涉诉率分别是多少？（涉诉专利数/总专利数）",
+    "cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(o:Organization)\nWITH o.entity_type AS type, collect(DISTINCT p) AS ps\nWITH type,\n     size(ps) AS total,\n     size([x IN ps WHERE EXISTS { MATCH (x)-[:LITIGATED_WITH]->(:Organization) }]) AS litigated\nRETURN type, total, litigated,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(litigated) / total END AS litigation_rate\nORDER BY litigation_rate DESC",
+    "family": "ratio_comparison",
+    "dims": [
+      "legal",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_168",
+    "question": "请对比：山东省 vs 河南省，H01M类专利占比各是多少？（H01M专利数/总专利数）",
+    "cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province IN ['山东省','河南省']\nWITH loc.province AS province, collect(DISTINCT p) AS ps\nWITH province,\n     size(ps) AS total,\n     size([x IN ps WHERE EXISTS { MATCH (x)-[:CLASSIFIED_AS]->(ipc:IPCCode) WHERE ipc.code STARTS WITH 'H01M' }]) AS h01m\nRETURN province, total, h01m,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(h01m) / total END AS h01m_share\nORDER BY h01m_share DESC",
+    "family": "ratio_comparison",
+    "dims": [
+      "technical",
+      "geographic",
+      "organizational"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_169",
+    "question": "我想知道：申请量TOP10的机构中，各自US公开专利占比是多少？",
+    "cypher": "MATCH (o:Organization)<-[:APPLIED_BY]-(p:Patent)\nWITH o, count(DISTINCT p) AS total\nORDER BY total DESC\nLIMIT 10\nMATCH (o)<-[:APPLIED_BY]-(p2:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH o, total, count(DISTINCT CASE WHEN c.code = 'US' THEN p2 END) AS us_cnt\nRETURN o.name AS org, total, us_cnt,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(us_cnt) / total END AS us_share\nORDER BY us_share DESC",
+    "family": "ratio_comparison",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_170",
+    "question": "请分析：按公开国家统计，C25B类专利占该国全部公开专利的比例是多少？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH c, collect(DISTINCT p) AS ps\nWITH c.code AS country, ps,\n     size(ps) AS total,\n     size([x IN ps WHERE EXISTS { MATCH (x)-[:CLASSIFIED_AS]->(ipc:IPCCode) WHERE ipc.code STARTS WITH 'C25B' }]) AS c25b\nRETURN country, total, c25b,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(c25b) / total END AS c25b_share\nORDER BY c25b_share DESC\nLIMIT 20",
+    "family": "ratio_comparison",
+    "dims": [
+      "technical",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_171",
+    "question": "麻烦统计：按申请年份看，发生过许可（LICENSED_TO）的专利占比是多少？",
+    "cypher": "MATCH (p:Patent)\nWITH substring(p.application_date, 0, 4) AS year, collect(DISTINCT p) AS ps\nWITH year,\n     size(ps) AS total,\n     size([x IN ps WHERE EXISTS { MATCH (x)-[:LICENSED_TO]->(:Organization) }]) AS licensed\nRETURN year, total, licensed,\n       CASE WHEN total = 0 THEN 0.0 ELSE toFloat(licensed) / total END AS license_rate\nORDER BY year DESC\nLIMIT 15",
+    "family": "ratio_comparison",
+    "dims": [
+      "business"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_172",
+    "question": "请分析各省：机构层面汇总转入（TRANSFERRED_TO）与转出（TRANSFERRED_FROM）专利数量，并给出净值（转入-转出）。",
+    "cypher": "MATCH (o:Organization)-[:LOCATED_IN]->(loc:Location)\nWITH o, loc.province AS province\nOPTIONAL MATCH (pIn:Patent)-[:TRANSFERRED_TO]->(o)\nOPTIONAL MATCH (pOut:Patent)-[:TRANSFERRED_FROM]->(o)\nWITH province, count(DISTINCT pIn) AS transferred_in, count(DISTINCT pOut) AS transferred_out\nRETURN province, transferred_in, transferred_out, (transferred_in - transferred_out) AS net_transfer\nORDER BY net_transfer DESC\nLIMIT 20",
+    "family": "ratio_comparison",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_173",
+    "question": "我想知道：按专利族最早申请年份统计，跨国专利族（公开国家>=2）占比是多少？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)\nWITH f, min(substring(p.application_date, 0, 4)) AS firstYear\nMATCH (f)<-[:IN_FAMILY]-(p2:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH firstYear AS year, f, collect(DISTINCT c.code) AS countries\nWITH year,\n     count(DISTINCT f) AS families_total,\n     count(DISTINCT CASE WHEN size(countries) >= 2 THEN f END) AS cross_families\nRETURN year, families_total, cross_families,\n       CASE WHEN families_total = 0 THEN 0.0 ELSE toFloat(cross_families) / families_total END AS cross_family_rate\nORDER BY year DESC\nLIMIT 20",
+    "family": "ratio_comparison",
+    "dims": [
+      "geographic",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_174",
+    "question": "请给我一份2024年申请专利的“全量画像”：申请人、权利人、技术领域、专利族、公开国家、法律状态列表、IPC列表（缺失则填默认）。",
+    "cypher": "MATCH (p:Patent)\nWHERE substring(p.application_date, 0, 4) = '2024'\nOPTIONAL MATCH (p)-[:APPLIED_BY]->(a:Organization)\nOPTIONAL MATCH (p)-[:OWNED_BY]->(o:Organization)\nOPTIONAL MATCH (p)-[:BELONGS_TO]->(d:TechDomain)\nOPTIONAL MATCH (p)-[:IN_FAMILY]->(f:PatentFamily)\nOPTIONAL MATCH (p)-[:PUBLISHED_IN]->(c:Country)\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nOPTIONAL MATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWITH p, a, o, d, f, c, collect(DISTINCT ls.name) AS statuses, collect(DISTINCT ipc.code) AS ipcs\nRETURN p.application_no AS application_no,\n       p.title AS title,\n       coalesce(a.name,'未知') AS applicant,\n       coalesce(o.name,'未知') AS owner,\n       coalesce(d.name,'未知') AS domain,\n       coalesce(f.family_id,'无') AS family_id,\n       coalesce(c.code,'未知') AS country,\n       CASE WHEN size(statuses)=0 THEN ['未知'] ELSE statuses END AS statuses,\n       ipcs\nORDER BY p.application_date DESC\nLIMIT 20",
+    "family": "multi_attribute",
+    "dims": [
+      "technical",
+      "legal",
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 5
+  },
+  {
+    "id": "oot_175",
+    "question": "想了解：名称包含“氢能”或“燃料电池”的机构，能否汇总其申请/拥有/转入/转出/许可进出/质押进出数量，并带上省市？",
+    "cypher": "MATCH (o:Organization)\nWHERE o.name CONTAINS '氢能' OR o.name CONTAINS '燃料电池'\nOPTIONAL MATCH (o)-[:LOCATED_IN]->(loc:Location)\nOPTIONAL MATCH (pA:Patent)-[:APPLIED_BY]->(o)\nOPTIONAL MATCH (pO:Patent)-[:OWNED_BY]->(o)\nOPTIONAL MATCH (pTin:Patent)-[:TRANSFERRED_TO]->(o)\nOPTIONAL MATCH (pTout:Patent)-[:TRANSFERRED_FROM]->(o)\nOPTIONAL MATCH (pLin:Patent)-[:LICENSED_TO]->(o)\nOPTIONAL MATCH (pLout:Patent)-[:LICENSED_FROM]->(o)\nOPTIONAL MATCH (pPin:Patent)-[:PLEDGED_TO]->(o)\nOPTIONAL MATCH (pPout:Patent)-[:PLEDGED_FROM]->(o)\nRETURN o.name AS org,\n       coalesce(loc.province,'未知') AS province,\n       coalesce(loc.city,'未知') AS city,\n       count(DISTINCT pA) AS applied_cnt,\n       count(DISTINCT pO) AS owned_cnt,\n       count(DISTINCT pTin) AS transferred_in,\n       count(DISTINCT pTout) AS transferred_out,\n       count(DISTINCT pLin) AS licensed_in,\n       count(DISTINCT pLout) AS licensed_out,\n       count(DISTINCT pPin) AS pledged_in,\n       count(DISTINCT pPout) AS pledged_out\nORDER BY applied_cnt DESC\nLIMIT 20",
+    "family": "multi_attribute",
+    "dims": [
+      "organizational",
+      "geographic",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_176",
+    "question": "请问能否给出专利族概览：成员申请号样例、公开国家列表、法律状态列表、技术领域列表，以及该族是否存在涉诉成员？",
+    "cypher": "MATCH (f:PatentFamily)\nMATCH (f)<-[:IN_FAMILY]-(p:Patent)\nOPTIONAL MATCH (p)-[:PUBLISHED_IN]->(c:Country)\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nOPTIONAL MATCH (p)-[:BELONGS_TO]->(d:TechDomain)\nWITH f,\n     collect(DISTINCT p.application_no) AS members,\n     collect(DISTINCT c.code) AS countries,\n     collect(DISTINCT ls.name) AS statuses,\n     collect(DISTINCT d.name) AS domains,\n     collect(DISTINCT p) AS ps\nRETURN f.family_id AS family_id,\n       size(members) AS family_size,\n       members[0..10] AS sample_members,\n       countries,\n       CASE WHEN size(statuses)=0 THEN ['未知'] ELSE statuses END AS statuses,\n       domains,\n       CASE WHEN any(x IN ps WHERE EXISTS { MATCH (x)-[:LITIGATED_WITH]->(:Organization) }) THEN '是' ELSE '否' END AS has_litigation\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "multi_attribute",
+    "dims": [
+      "technical",
+      "legal",
+      "geographic",
+      "business"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_177",
+    "question": "想了解诉讼画像：按对方机构汇总其涉及的专利数量、角色role集合、诉讼类型集合和专利法律状态集合（各取样例）。",
+    "cypher": "MATCH (p:Patent)-[lw:LITIGATED_WITH]->(opp:Organization)\nOPTIONAL MATCH (p)-[:HAS_LITIGATION_TYPE]->(lt:LitigationType)\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH opp,\n     collect(DISTINCT p.application_no) AS patents,\n     collect(DISTINCT coalesce(lw.role,'未知')) AS roles,\n     collect(DISTINCT coalesce(lt.name,'未知')) AS types,\n     collect(DISTINCT coalesce(ls.name,'未知')) AS statuses\nRETURN opp.name AS opponent,\n       size(patents) AS involved_patents,\n       patents[0..10] AS sample_patents,\n       roles,\n       types,\n       statuses\nORDER BY involved_patents DESC\nLIMIT 20",
+    "family": "multi_attribute",
+    "dims": [
+      "legal",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_178",
+    "question": "请分析储氢技术各三级子域：专利总数、授权数、涉诉数分别是多少？",
+    "cypher": "MATCH (d3:TechDomain {level:3})-[:PARENT_DOMAIN*]->(:TechDomain {name:'储氢技术'})\nOPTIONAL MATCH (p:Patent)-[:BELONGS_TO]->(d3)\nWITH d3, collect(DISTINCT p) AS ps\nWITH d3,\n     size(ps) AS total,\n     size([x IN ps WHERE EXISTS { MATCH (x)-[:HAS_STATUS]->(:LegalStatus {name:'授权'}) }]) AS authorized,\n     size([x IN ps WHERE EXISTS { MATCH (x)-[:LITIGATED_WITH]->(:Organization) }]) AS litigated\nRETURN d3.name AS domain, total, authorized, litigated\nORDER BY total DESC\nLIMIT 20",
+    "family": "multi_attribute",
+    "dims": [
+      "technical",
+      "legal",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_179",
+    "question": "我想知道：2022年申请的专利中，哪些缺少权利人记录？并补充其申请人、领域、法律状态、公开国家（如有）。",
+    "cypher": "MATCH (p:Patent)\nWHERE substring(p.application_date, 0, 4) = '2022'\n  AND NOT EXISTS { MATCH (p)-[:OWNED_BY]->(:Organization) }\nOPTIONAL MATCH (p)-[:APPLIED_BY]->(a:Organization)\nOPTIONAL MATCH (p)-[:BELONGS_TO]->(d:TechDomain)\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nOPTIONAL MATCH (p)-[:PUBLISHED_IN]->(c:Country)\nRETURN p.application_no AS application_no,\n       p.title AS title,\n       coalesce(a.name,'未知') AS applicant,\n       coalesce(d.name,'未知') AS domain,\n       coalesce(ls.name,'未知') AS status,\n       coalesce(c.code,'未知') AS country\nORDER BY application_no\nLIMIT 25",
+    "family": "multi_attribute",
+    "dims": [
+      "legal",
+      "organizational",
+      "geographic",
+      "technical"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_180",
+    "question": "想了解人员画像：人员-机构-省份，并返回该机构申请专利数量以及涉及的技术领域列表。",
+    "cypher": "MATCH (per:Person)-[:AFFILIATED_WITH]->(o:Organization)\nOPTIONAL MATCH (o)-[:LOCATED_IN]->(loc:Location)\nOPTIONAL MATCH (pat:Patent)-[:APPLIED_BY]->(o)-[:BELONGS_TO]->(d:TechDomain)\nWITH per, o, coalesce(loc.province,'未知') AS province,\n     count(DISTINCT pat) AS patents,\n     collect(DISTINCT d.name) AS domains\nRETURN per.name AS person, o.name AS org, province, patents, domains\nORDER BY patents DESC\nLIMIT 30",
+    "family": "multi_attribute",
+    "dims": [
+      "organizational",
+      "geographic",
+      "technical",
+      "business"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_181",
+    "question": "请问被“银行”类机构质押的专利，能否同时返回银行省份与专利法律状态？",
+    "cypher": "MATCH (p:Patent)-[:PLEDGED_TO]->(bank:Organization)\nWHERE bank.name CONTAINS '银行'\nOPTIONAL MATCH (bank)-[:LOCATED_IN]->(bloc:Location)\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nRETURN p.application_no AS application_no, p.title AS title,\n       bank.name AS bank,\n       coalesce(bloc.province,'未知') AS bank_province,\n       coalesce(ls.name,'未知') AS status\nORDER BY application_no\nLIMIT 25",
+    "family": "multi_attribute",
+    "dims": [
+      "legal",
+      "organizational",
+      "geographic",
+      "business"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_182",
+    "question": "想了解转让清单：请列出专利的转出/转入机构及其省份，并带上公开国家和申请年份（缺失则显示未知）。",
+    "cypher": "MATCH (p:Patent)-[:TRANSFERRED_FROM]->(from:Organization)\nMATCH (p)-[:TRANSFERRED_TO]->(to:Organization)\nOPTIONAL MATCH (from)-[:LOCATED_IN]->(l1:Location)\nOPTIONAL MATCH (to)-[:LOCATED_IN]->(l2:Location)\nOPTIONAL MATCH (p)-[:PUBLISHED_IN]->(c:Country)\nRETURN p.application_no AS application_no,\n       p.title AS title,\n       coalesce(l1.province,'未知') AS from_province,\n       coalesce(l2.province,'未知') AS to_province,\n       coalesce(c.code,'未知') AS country,\n       substring(p.application_date, 0, 4) AS year\nORDER BY year DESC, application_no\nLIMIT 25",
+    "family": "multi_attribute",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_183",
+    "question": "请问哪些专利拥有至少3个不同IPC分类？并把IPC代码与描述一起列出来。",
+    "cypher": "MATCH (p:Patent)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWITH p, collect(DISTINCT {code: ipc.code, desc: ipc.description}) AS ipcs\nWHERE size(ipcs) >= 3\nRETURN p.application_no AS application_no, p.title AS title, ipcs\nORDER BY size(ipcs) DESC\nLIMIT 20",
+    "family": "multi_attribute",
+    "dims": [
+      "technical"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_184",
+    "question": "我想知道：北京市机构申请的专利中，公开国家至少覆盖两个国家的机构有哪些？并返回国家列表。",
+    "cypher": "MATCH (o:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '北京市'\nMATCH (p:Patent)-[:APPLIED_BY]->(o)-[:PUBLISHED_IN]->(c:Country)\nWITH o, collect(DISTINCT c.code) AS countries, count(DISTINCT p) AS patents\nWHERE size(countries) >= 2\nRETURN o.name AS org, patents, countries\nORDER BY size(countries) DESC, patents DESC\nLIMIT 20",
+    "family": "multi_attribute",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_185",
+    "question": "想了解：在CN公开、且其专利族跨至少2个国家的专利有哪些？同时返回该专利的状态与权利人。",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'CN'})\nMATCH (p)-[:IN_FAMILY]->(f:PatentFamily)\nMATCH (f)<-[:IN_FAMILY]-(m:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH p, f, collect(DISTINCT c.code) AS countries\nWHERE size(countries) >= 2\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nOPTIONAL MATCH (p)-[:OWNED_BY]->(o:Organization)\nRETURN p.application_no AS application_no, p.title AS title,\n       f.family_id AS family_id, countries,\n       coalesce(ls.name,'未知') AS status,\n       coalesce(o.name,'未知') AS owner\nORDER BY application_no\nLIMIT 20",
+    "family": "multi_attribute",
+    "dims": [
+      "legal",
+      "geographic",
+      "business",
+      "organizational"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_186",
+    "question": "请给我看看专利业务事件标记：每件专利是否发生许可/质押/转让/诉讼（是/否）。",
+    "cypher": "MATCH (p:Patent)\nWITH p,\n     CASE WHEN EXISTS { MATCH (p)-[:LICENSED_TO]->(:Organization) } THEN '是' ELSE '否' END AS has_license,\n     CASE WHEN EXISTS { MATCH (p)-[:PLEDGED_TO]->(:Organization) } THEN '是' ELSE '否' END AS has_pledge,\n     CASE WHEN EXISTS { MATCH (p)-[:TRANSFERRED_TO]->(:Organization) } THEN '是' ELSE '否' END AS has_transfer,\n     CASE WHEN EXISTS { MATCH (p)-[:LITIGATED_WITH]->(:Organization) } THEN '是' ELSE '否' END AS has_litigation\nRETURN p.application_no AS application_no, p.title AS title, has_license, has_pledge, has_transfer, has_litigation\nORDER BY application_no\nLIMIT 25",
+    "family": "multi_attribute",
+    "dims": [
+      "legal",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_187",
+    "question": "想了解机构技术偏好：按权利人统计其TOP3 IPC前缀（前4位），并带上机构省份。",
+    "cypher": "MATCH (o:Organization)<-[:OWNED_BY]-(p:Patent)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nOPTIONAL MATCH (o)-[:LOCATED_IN]->(loc:Location)\nWITH o, loc, substring(ipc.code, 0, 4) AS prefix, count(DISTINCT p) AS cnt\nWITH o, loc, prefix, cnt ORDER BY cnt DESC\nWITH o, loc, collect({prefix: prefix, cnt: cnt}) AS pref_counts\nRETURN o.name AS org, coalesce(loc.province,'未知') AS province, pref_counts[0..3] AS top_prefixes\nORDER BY org\nLIMIT 20",
+    "family": "multi_attribute",
+    "dims": [
+      "technical",
+      "organizational",
+      "geographic"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_188",
+    "question": "请问能否列出专利的技术域及其上级域（若存在PARENT_DOMAIN），用于检查领域层级是否完整？",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(d:TechDomain)\nOPTIONAL MATCH (d)-[:PARENT_DOMAIN]->(parent:TechDomain)\nRETURN p.application_no AS application_no, p.title AS title, d.name AS domain, coalesce(parent.name,'无上级') AS parent_domain\nORDER BY application_no\nLIMIT 25",
+    "family": "multi_attribute",
+    "dims": [
+      "technical"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_189",
+    "question": "想了解：机构所在地的层级关系（Location→PARENT_LOCATION），请列出机构、地点、上一级与上上一级地点名称。",
+    "cypher": "MATCH (o:Organization)-[:LOCATED_IN]->(loc:Location)\nOPTIONAL MATCH (loc)-[:PARENT_LOCATION]->(pl:Location)\nOPTIONAL MATCH (pl)-[:PARENT_LOCATION]->(pl2:Location)\nRETURN o.name AS org,\n       loc.name AS location,\n       coalesce(loc.city,'未知') AS city,\n       coalesce(loc.province,'未知') AS province,\n       coalesce(pl.name,'-') AS parent1,\n       coalesce(pl2.name,'-') AS parent2\nORDER BY org\nLIMIT 25",
+    "family": "multi_attribute",
+    "dims": [
+      "geographic",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_190",
+    "question": "请给我看看：公开国家与申请机构所在国家不一致的专利，并补充其法律状态与IPC列表。",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(c:Country)\nMATCH (p)-[:APPLIED_BY]->(a:Organization)-[:LOCATED_IN]->(al:Location)\nWHERE al.country IS NOT NULL AND c.name <> al.country\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nOPTIONAL MATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWITH p, c, a, al, collect(DISTINCT ls.name) AS statuses, collect(DISTINCT ipc.code) AS ipcs\nRETURN p.application_no AS application_no, p.title AS title,\n       c.name AS published_country,\n       al.country AS applicant_country,\n       a.name AS applicant,\n       CASE WHEN size(statuses)=0 THEN ['未知'] ELSE statuses END AS statuses,\n       ipcs\nORDER BY application_no\nLIMIT 20",
+    "family": "multi_attribute",
+    "dims": [
+      "geographic",
+      "organizational",
+      "technical",
+      "legal"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_191",
+    "question": "请分析：哪些专利族同时在CN和US公开，但整个专利族里没有任何成员是授权状态？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH f, collect(DISTINCT c.code) AS countries\nWHERE 'CN' IN countries AND 'US' IN countries\nMATCH (f)<-[:IN_FAMILY]-(p2:Patent)\nOPTIONAL MATCH (p2)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH f, countries, collect(DISTINCT coalesce(ls.name,'无')) AS statuses, count(DISTINCT p2) AS n\nWHERE NOT ('授权' IN statuses)\nRETURN f.family_id AS family_id, n AS family_size, countries, statuses\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "mixed",
+    "dims": [
+      "business",
+      "geographic",
+      "legal"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_192",
+    "question": "我想知道：各省境外公开专利（非CN）的授权率是多少？（授权数/境外公开总数）",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(c:Country)\nWHERE c.code <> 'CN'\nMATCH (p)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH loc.province AS province,\n     count(DISTINCT p) AS total_abroad,\n     count(DISTINCT CASE WHEN ls.name = '授权' THEN p END) AS authorized_abroad\nRETURN province, total_abroad, authorized_abroad,\n       CASE WHEN total_abroad = 0 THEN 0.0 ELSE toFloat(authorized_abroad) / total_abroad END AS abroad_auth_rate\nORDER BY abroad_auth_rate DESC\nLIMIT 20",
+    "family": "mixed",
+    "dims": [
+      "geographic",
+      "legal",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_193",
+    "question": "想了解：哪些跨国专利族（公开国家>=2）中，存在H01M成员且该成员还涉诉？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)\nWITH f, collect(DISTINCT p) AS ps\nWHERE any(x IN ps WHERE EXISTS { MATCH (x)-[:CLASSIFIED_AS]->(ipc:IPCCode) WHERE ipc.code STARTS WITH 'H01M' }\n               AND EXISTS { MATCH (x)-[:LITIGATED_WITH]->(:Organization) })\nMATCH (f)<-[:IN_FAMILY]-(:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH f, ps, collect(DISTINCT c.code) AS countries\nWHERE size(countries) >= 2\nRETURN f.family_id AS family_id, size(ps) AS family_size, countries\nORDER BY family_size DESC\nLIMIT 20",
+    "family": "mixed",
+    "dims": [
+      "technical",
+      "legal",
+      "geographic",
+      "business"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_194",
+    "question": "请帮忙查一下：发生过转让但缺少权利人记录的专利有哪些？并尽量补全转让双方、法律状态与公开国家。",
+    "cypher": "MATCH (p:Patent)\nWHERE EXISTS { MATCH (p)-[:TRANSFERRED_TO]->(:Organization) }\n  AND NOT EXISTS { MATCH (p)-[:OWNED_BY]->(:Organization) }\nOPTIONAL MATCH (p)-[:TRANSFERRED_FROM]->(from:Organization)\nOPTIONAL MATCH (p)-[:TRANSFERRED_TO]->(to:Organization)\nOPTIONAL MATCH (p)-[:HAS_STATUS]->(ls:LegalStatus)\nOPTIONAL MATCH (p)-[:PUBLISHED_IN]->(c:Country)\nRETURN p.application_no AS application_no, p.title AS title,\n       coalesce(from.name,'未记录') AS transferred_from,\n       coalesce(to.name,'未记录') AS transferred_to,\n       coalesce(ls.name,'未知') AS status,\n       coalesce(c.code,'未知') AS country\nORDER BY application_no\nLIMIT 25",
+    "family": "mixed",
+    "dims": [
+      "business",
+      "organizational",
+      "legal",
+      "geographic"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_195",
+    "question": "请分析：按申请年份统计，在发生过任一业务事件（转让/许可/质押）的专利中，同时发生许可+质押的占比是多少？",
+    "cypher": "MATCH (p:Patent)\nWITH substring(p.application_date, 0, 4) AS year, collect(DISTINCT p) AS ps\nWITH year,\n     [x IN ps WHERE EXISTS { MATCH (x)-[:TRANSFERRED_TO]->(:Organization) } OR EXISTS { MATCH (x)-[:LICENSED_TO]->(:Organization) } OR EXISTS { MATCH (x)-[:PLEDGED_TO]->(:Organization) }] AS event_ps,\n     [x IN ps WHERE EXISTS { MATCH (x)-[:LICENSED_TO]->(:Organization) } AND EXISTS { MATCH (x)-[:PLEDGED_TO]->(:Organization) }] AS both_ps\nRETURN year,\n       size(event_ps) AS with_any_event,\n       size(both_ps) AS with_license_and_pledge,\n       CASE WHEN size(event_ps) = 0 THEN 0.0 ELSE toFloat(size(both_ps)) / size(event_ps) END AS both_share\nORDER BY year DESC\nLIMIT 15",
+    "family": "mixed",
+    "dims": [
+      "business"
+    ],
+    "n_dims": 1
+  },
+  {
+    "id": "oot_196",
+    "question": "我想知道：在DE公开、已授权且IPC为C25B前缀的专利中，哪些是中国机构申请的？",
+    "cypher": "MATCH (p:Patent)-[:PUBLISHED_IN]->(:Country {code:'DE'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'C25B'\nMATCH (p)-[:HAS_STATUS]->(:LegalStatus {name:'授权'})\nMATCH (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.country = '中国'\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, o.name AS applicant, loc.province AS province, ipc.code AS ipc\nORDER BY application_no\nLIMIT 20",
+    "family": "mixed",
+    "dims": [
+      "geographic",
+      "technical",
+      "legal",
+      "organizational"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_197",
+    "question": "请分析：按公开国家统计，存在涉诉成员的专利族，其平均专利族规模是多少？",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)\nWITH f, count(DISTINCT p) AS family_size\nWHERE EXISTS { MATCH (f)<-[:IN_FAMILY]-(x:Patent)-[:LITIGATED_WITH]->(:Organization) }\nMATCH (f)<-[:IN_FAMILY]-(p2:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH DISTINCT c.code AS country, f, family_size\nRETURN country, avg(family_size) AS avg_family_size, count(DISTINCT f) AS families\nORDER BY avg_family_size DESC\nLIMIT 20",
+    "family": "mixed",
+    "dims": [
+      "legal",
+      "geographic",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "oot_198",
+    "question": "请问制氢技术里IPC为C25B前缀、但没有在CN公开过的专利有哪些？",
+    "cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(:TechDomain {name:'制氢技术'})\nMATCH (p)-[:CLASSIFIED_AS]->(ipc:IPCCode)\nWHERE ipc.code STARTS WITH 'C25B'\n  AND NOT EXISTS { MATCH (p)-[:PUBLISHED_IN]->(:Country {code:'CN'}) }\nRETURN DISTINCT p.application_no AS application_no, p.title AS title, ipc.code AS ipc\nORDER BY application_no\nLIMIT 20",
+    "family": "mixed",
+    "dims": [
+      "technical",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "oot_199",
+    "question": "请分析：哪些专利存在多个法律状态且发生过转让？并返回转入方及其省份。",
+    "cypher": "MATCH (p:Patent)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH p, collect(DISTINCT ls.name) AS statuses\nWHERE size(statuses) >= 2\n  AND EXISTS { MATCH (p)-[:TRANSFERRED_TO]->(:Organization) }\nOPTIONAL MATCH (p)-[:TRANSFERRED_TO]->(to:Organization)-[:LOCATED_IN]->(loc:Location)\nWITH p, statuses, collect(DISTINCT to.name) AS transferees, collect(DISTINCT coalesce(loc.province,'未知')) AS to_provinces\nRETURN p.application_no AS application_no, p.title AS title, statuses, transferees AS transferred_to, to_provinces\nORDER BY size(statuses) DESC, application_no\nLIMIT 20",
+    "family": "mixed",
+    "dims": [
+      "legal",
+      "business",
+      "organizational",
+      "geographic"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "oot_200",
+    "question": "我想知道：申请机构在北京市、且专利族公开国家至少3个的专利族有哪些？同时返回该族授权成员数量。",
+    "cypher": "MATCH (f:PatentFamily)<-[:IN_FAMILY]-(p:Patent)-[:APPLIED_BY]->(:Organization)-[:LOCATED_IN]->(loc:Location)\nWHERE loc.province = '北京市'\nWITH DISTINCT f\nMATCH (f)<-[:IN_FAMILY]-(m:Patent)-[:PUBLISHED_IN]->(c:Country)\nWITH f, collect(DISTINCT c.code) AS countries\nWHERE size(countries) >= 3\nMATCH (f)<-[:IN_FAMILY]-(m2:Patent)\nOPTIONAL MATCH (m2)-[:HAS_STATUS]->(ls:LegalStatus)\nWITH f, countries,\n     count(DISTINCT m2) AS family_size,\n     count(DISTINCT CASE WHEN ls.name = '授权' THEN m2 END) AS authorized_cnt\nRETURN f.family_id AS family_id, family_size, countries, authorized_cnt\nORDER BY size(countries) DESC, authorized_cnt DESC\nLIMIT 20",
+    "family": "mixed",
+    "dims": [
+      "geographic",
+      "organizational",
+      "business",
+      "legal"
+    ],
+    "n_dims": 4
+  }
+]

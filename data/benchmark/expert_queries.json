@@ -1,0 +1,272 @@
+[
+  {
+    "id": "expert_q001",
+    "question": "我们计划在广东布局制氢示范线：请检索近三年（申请年>=2023）在广东省落地的制氢技术专利清单。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE t.name = '制氢技术' AND loc.province = '广东省' AND substring(p.application_date,0,4) >= '2023' RETURN p.application_no, p.title_cn, p.application_date ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "expert_q002",
+    "question": "请返回由公司申请的氢燃料电池专利，用于识别可并购的专利资产。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:APPLIED_BY]->(o:Organization) WHERE t.name = '氢燃料电池' AND o.entity_type = '公司' RETURN p.application_no, p.title_cn, p.application_date, o.name AS applicant ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "expert_q003",
+    "question": "请检索法律状态为授权的储氢相关专利（含物理/合金/无机/有机储氢）。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:HAS_STATUS]->(ls:LegalStatus) WHERE t.name IN ['储氢技术','物理储氢','合金储氢','无机储氢','有机储氢'] AND ls.name = '授权' RETURN p.application_no, p.title_cn, p.application_date, t.name AS tech_domain ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "legal"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "expert_q004",
+    "question": "请返回北京市的氢制冷专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE t.name = '氢制冷' AND loc.province = '北京市' RETURN p.application_no, p.title_cn, p.application_date ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "expert_q005",
+    "question": "请查询已许可给名称包含丰田的组织的氢能专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:LICENSED_TO]->(o:Organization) WHERE o.name CONTAINS '丰田' RETURN p.application_no, p.title_cn, p.application_date, o.name AS licensed_to ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "business",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "expert_q006",
+    "question": "请返回在江苏省落地且存在质押记录的氢能专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:PLEDGED_TO]->(o:Organization), (p)-[:APPLIED_BY]->(a:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '江苏省' RETURN p.application_no, p.title_cn, p.application_date, o.name AS pledgee ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "business",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "expert_q007",
+    "question": "请检索在上海落地且存在诉讼类型记录的氢能专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:HAS_LITIGATION_TYPE]->(lt:LitigationType), (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE loc.province = '上海市' RETURN p.application_no, p.title_cn, p.application_date, lt.name AS litigation_type ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "legal",
+      "geographic"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "expert_q008",
+    "question": "请返回由公司拥有且法律状态为无效/终止的氢能专利列表。",
+    "gold_cypher": "MATCH (p:Patent)-[:OWNED_BY]->(o:Organization), (p)-[:HAS_STATUS]->(ls:LegalStatus) WHERE o.entity_type = '公司' AND ls.name IN ['全部无效','部分无效','权利终止'] RETURN p.application_no, p.title_cn, p.application_date, o.name AS owner ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "legal",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "expert_q009",
+    "question": "请返回氢燃料电池领域存在转让记录的专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:TRANSFERRED_TO]->(to:Organization) WHERE t.name = '氢燃料电池' RETURN p.application_no, p.title_cn, p.application_date, to.name AS transferred_to ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "business"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "expert_q010",
+    "question": "请返回由研究机构拥有的合金储氢专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:OWNED_BY]->(o:Organization) WHERE t.name = '合金储氢' AND o.entity_type = '研究机构' RETURN p.application_no, p.title_cn, p.application_date, o.name AS owner ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "organizational"
+    ],
+    "n_dims": 2
+  },
+  {
+    "id": "expert_q011",
+    "question": "请检索广东省内由公司申请的制氢技术专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE t.name = '制氢技术' AND loc.province = '广东省' AND o.entity_type = '公司' RETURN p.application_no, p.title_cn, p.application_date, o.name AS applicant ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic",
+      "organizational"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "expert_q012",
+    "question": "请返回江苏省内法律状态为授权的有机储氢专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:HAS_STATUS]->(ls:LegalStatus) WHERE t.name = '有机储氢' AND loc.province = '江苏省' AND ls.name = '授权' RETURN p.application_no, p.title_cn, p.application_date ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic",
+      "legal"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "expert_q013",
+    "question": "请检索氢燃料电池领域中由高校申请且已对外许可的专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:APPLIED_BY]->(u:Organization), (p)-[:LICENSED_TO]->(lic:Organization) WHERE t.name = '氢燃料电池' AND u.entity_type = '高校' RETURN p.application_no, p.title_cn, p.application_date, u.name AS university, lic.name AS licensed_to ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "expert_q014",
+    "question": "请返回四川省内氢制冷领域存在转让记录的专利清单。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:TRANSFERRED_TO]->(to:Organization) WHERE t.name = '氢制冷' AND loc.province = '四川省' RETURN p.application_no, p.title_cn, p.application_date, to.name AS transferred_to ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "expert_q015",
+    "question": "请返回由公司拥有、法律状态为授权、且质押权人名称包含银行的氢能专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:OWNED_BY]->(o:Organization), (p)-[:HAS_STATUS]->(ls:LegalStatus), (p)-[:PLEDGED_TO]->(bank:Organization) WHERE o.entity_type = '公司' AND ls.name = '授权' AND bank.name CONTAINS '银行' RETURN p.application_no, p.title_cn, p.application_date, o.name AS owner, bank.name AS pledgee ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "organizational",
+      "business",
+      "legal"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "expert_q016",
+    "question": "请检索由研究机构申请、且法律状态为授权的无机储氢专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:APPLIED_BY]->(o:Organization), (p)-[:HAS_STATUS]->(ls:LegalStatus) WHERE t.name = '无机储氢' AND o.entity_type = '研究机构' AND ls.name = '授权' RETURN p.application_no, p.title_cn, p.application_date, o.name AS applicant ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "organizational",
+      "legal"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "expert_q017",
+    "question": "请返回山东省内由研究机构拥有的合金储氢专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:OWNED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location) WHERE t.name = '合金储氢' AND o.entity_type = '研究机构' AND loc.province = '山东省' RETURN p.application_no, p.title_cn, p.application_date, o.name AS owner ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic",
+      "organizational"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "expert_q018",
+    "question": "请检索制氢技术中在美国公开且存在对外许可记录的专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:PUBLISHED_IN]->(c:Country), (p)-[:LICENSED_TO]->(lic:Organization) WHERE t.name = '制氢技术' AND c.name = '美国' RETURN p.application_no, p.title_cn, p.application_date, lic.name AS licensed_to ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "expert_q019",
+    "question": "请返回氢燃料电池领域中由公司拥有且存在诉讼类型记录的专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:OWNED_BY]->(o:Organization), (p)-[:HAS_LITIGATION_TYPE]->(lt:LitigationType) WHERE t.name = '氢燃料电池' AND o.entity_type = '公司' RETURN p.application_no, p.title_cn, p.application_date, o.name AS owner, lt.name AS litigation_type ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "organizational",
+      "legal"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "expert_q020",
+    "question": "请检索位于广东省、由高校申请且已发生转让至公司的氢能专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:APPLIED_BY]->(u:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:TRANSFERRED_TO]->(co:Organization) WHERE loc.province = '广东省' AND u.entity_type = '高校' AND co.entity_type = '公司' RETURN p.application_no, p.title_cn, p.application_date, u.name AS university, co.name AS transferred_to ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 3
+  },
+  {
+    "id": "expert_q021",
+    "question": "请返回江苏省内由公司拥有、且存在质押记录的物理储氢专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:OWNED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:PLEDGED_TO]->(pl:Organization) WHERE t.name = '物理储氢' AND loc.province = '江苏省' AND o.entity_type = '公司' RETURN p.application_no, p.title_cn, p.application_date, o.name AS owner, pl.name AS pledgee ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "expert_q022",
+    "question": "请返回上海市内由公司拥有且存在诉讼类型记录的氢燃料电池专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:OWNED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:HAS_LITIGATION_TYPE]->(lt:LitigationType) WHERE t.name = '氢燃料电池' AND loc.province = '上海市' AND o.entity_type = '公司' RETURN p.application_no, p.title_cn, p.application_date, o.name AS owner, lt.name AS litigation_type ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic",
+      "organizational",
+      "legal"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "expert_q023",
+    "question": "请返回广东省内法律状态为授权且已对外许可的制氢技术专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:APPLIED_BY]->(o:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:HAS_STATUS]->(ls:LegalStatus), (p)-[:LICENSED_TO]->(lic:Organization) WHERE t.name = '制氢技术' AND loc.province = '广东省' AND ls.name = '授权' RETURN p.application_no, p.title_cn, p.application_date, lic.name AS licensed_to ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic",
+      "business",
+      "legal"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "expert_q024",
+    "question": "请返回由高校拥有、法律状态为授权、且已发生转让记录的有机储氢专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:OWNED_BY]->(u:Organization), (p)-[:HAS_STATUS]->(ls:LegalStatus), (p)-[:TRANSFERRED_TO]->(to:Organization) WHERE t.name = '有机储氢' AND u.entity_type = '高校' AND ls.name = '授权' RETURN p.application_no, p.title_cn, p.application_date, u.name AS owner, to.name AS transferred_to ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "organizational",
+      "business",
+      "legal"
+    ],
+    "n_dims": 4
+  },
+  {
+    "id": "expert_q025",
+    "question": "请返回北京市内由研究机构申请且已对外许可的氢制冷专利。",
+    "gold_cypher": "MATCH (p:Patent)-[:BELONGS_TO]->(t:TechDomain), (p)-[:APPLIED_BY]->(ri:Organization)-[:LOCATED_IN]->(loc:Location), (p)-[:LICENSED_TO]->(lic:Organization) WHERE t.name = '氢制冷' AND loc.province = '北京市' AND ri.entity_type = '研究机构' RETURN p.application_no, p.title_cn, p.application_date, ri.name AS applicant, lic.name AS licensed_to ORDER BY p.application_date DESC LIMIT 20",
+    "dimensions": [
+      "technical",
+      "geographic",
+      "organizational",
+      "business"
+    ],
+    "n_dims": 4
+  }
+]
