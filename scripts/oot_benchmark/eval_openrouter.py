@@ -18,15 +18,12 @@ from collections import Counter, defaultdict
 from neo4j import GraphDatabase
 
 # ─── Config ───────────────────────────────────────────────────────────────────
-OPENROUTER_KEY = os.getenv(
-    "OPENROUTER_API_KEY",
-    "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",
-)
+OPENROUTER_KEY = os.environ["OPENROUTER_API_KEY"]
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-NEO4J_URI = "bolt://localhost:7687"
-NEO4J_USER = "neo4j"
-NEO4J_PWD = "hydrogen2026"
+NEO4J_URI = os.environ.get("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_USER = os.environ.get("NEO4J_USER", "neo4j")
+NEO4J_PWD = os.environ["NEO4J_PASSWORD"]
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_INPUT = os.path.join(SCRIPT_DIR, "oot_benchmark_final.json")

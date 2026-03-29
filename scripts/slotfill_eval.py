@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """SlotFill → Compiler baseline evaluation."""
-import json, sys, time
+import json, os, sys, time
 from openai import OpenAI
 from neo4j import GraphDatabase
 from cypher_compiler import compile_cypher
@@ -8,12 +8,15 @@ from cypher_compiler import compile_cypher
 BASE = '/home/v-zezhouwang/hydrogen-patent-research'
 
 client = OpenAI(
-    base_url="https://labds.bdware.cn:21041/v1",
-    api_key="sk-nShBYQmXOXAW2Se6ixe-Lg",
+    base_url=os.environ.get("KIMI_API_BASE", "https://labds.bdware.cn:21041/v1"),
+    api_key=os.environ["KIMI_API_KEY"],
 )
 MODEL = "Qwen3-Max"
 
-driver = GraphDatabase.driver('bolt://localhost:7687', auth=('neo4j', 'hydrogen2026'))
+driver = GraphDatabase.driver(
+    os.environ.get("NEO4J_URI", "bolt://localhost:7687"),
+    auth=(os.environ.get("NEO4J_USER", "neo4j"), os.environ["NEO4J_PASSWORD"])
+)
 
 SLOT_FILL_PROMPT = """你是氢能专利查询意图提取器。从用户问题中提取结构化约束，输出JSON。
 
